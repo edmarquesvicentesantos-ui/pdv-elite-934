@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, setDoc, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-// SUAS CHAVES DO FIREBASE
 const firebaseConfig = {
   apiKey: "AIzaSyAuQzRvaOndn3AkRvuA1PD0S4Jb9kbOar4",
   authDomain: "pdv-elite.firebaseapp.com",
@@ -15,50 +14,78 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// INICIALIZAR MESAS (Cria 12 mesas se não existirem)
-async function initMesas() {
-    for (let i = 1; i <= 12; i++) {
-        await setDoc(doc(db, "mesas", i.toString()), { status: 'livre', cliente: '' }, { merge: true });
-    }
-}
-
-// ESCUTAR ATUALIZAÇÕES DE MESAS EM TEMPO REAL
-onSnapshot(collection(db, "mesas"), (snapshot) => {
-    const grid = document.getElementById('mesaGrid');
-    grid.innerHTML = '';
-    snapshot.docs.sort((a, b) => a.id - b.id).forEach(doc => {
-        const mesa = doc.data();
-        const div = document.createElement('div');
-        div.className = `mesa ${mesa.status}`;
-        div.innerHTML = `<h3>Mesa ${doc.id}</h3><p>${mesa.cliente || 'Livre'}</p>`;
-        div.onclick = () => gerenciarMesa(doc.id, mesa);
-        grid.appendChild(div);
-    });
-});
-
-async function gerenciarMesa(id, dados) {
+// --- GESTÃO DE MESAS E CLIENTES ---
+window.gerenciarMesa = async (id, dados) => {
     if (dados.status === 'livre') {
-        const nome = prompt("Nome do cliente para abrir a mesa:");
+        const nome = prompt("Nome do Cliente/Mesa:");
+        const fone = prompt("WhatsApp do Cliente (Ex: 87999999999):");
         if (nome) {
-            await updateDoc(doc(db, "mesas", id), { status: 'ocupada', cliente: nome });
+            await updateDoc(doc(db, "mesas", id), { 
+                status: 'ocupada', 
+                cliente: nome, 
+                telefone: fone || '',
+                total: 0,
+                itens: [] 
+            });
         }
     } else {
-        if (confirm(`Deseja fechar a conta de ${dados.cliente}?`)) {
-            // Aqui você chamaria a função de imprimir e WhatsApp antes de liberar
-            window.imprimir(id, dados.cliente);
-            await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '' });
+        const acao = confirm(`Deseja ADICIONAR PRODUTO (Ok) ou FECHAR CONTA (Cancelar) para ${dados.cliente}?`);
+        if (acao) {
+            adicionarProdutoMesa(id, dados);
+        } else {
+            fecharConta(id, dados);
         }
+    }
+};
+
+// --- LANÇAR PRODUTO NA MESA & BAIXAR ESTOQUE ---
+async function adicionarProdutoMesa(id, dados) {
+    const prodNome = prompt("Nome do Produto (Ex: Cerveja):");
+    const valor = parseFloat(prompt("Valor (R$):"));
+    if (prodNome && valor) {
+        const novosItens = [...(dados.itens || []), { nome: prodNome, preco: valor }];
+        const novoTotal = (dados.total || 0) + valor;
+        await updateDoc(doc(db, "mesas", id), { itens: novosItens, total: novoTotal });
+        alert("Item lançado!");
     }
 }
 
-window.imprimir = (id, cliente) => {
-    document.getElementById('cupom-info').innerHTML = `Mesa: ${id}<br>Cliente: ${cliente}<br>${new Date().toLocaleString()}`;
-    window.print();
+// --- FECHAR CONTA E ENVIAR WHATSAPP ---
+async function fecharConta(id, dados) {
+    const total = dados.total || 0;
+    const listaItens = dados.itens.map(i => `• ${i.nome}: R$ ${i.preco.toFixed(2)}`).join('%0A');
+    
+    // 1. Gerar link do WhatsApp
+    if (dados.telefone) {
+        const msg = `*BOTECO 934 - RECIBO*%0ACliente: ${dados.cliente}%0A--------------------%0A${listaItens}%0A--------------------%0A*TOTAL: R$ ${total.toFixed(2)}*%0A_Obrigado pela preferência!_`;
+        window.open(`https://api.whatsapp.com/send?phone=55${dados.telefone}&text=${msg}`, '_blank');
+    }
+
+    // 2. Registrar no Financeiro (DRE/Caixa)
+    await addDoc(collection(db, "vendas"), {
+        data: new Date(),
+        cliente: dados.cliente,
+        total: total,
+        itens: dados.itens
+    });
+
+    // 3. Liberar Mesa
+    await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
+    alert("Conta fechada e enviada para o caixa!");
 }
 
-// Troca de abas simples
-window.switchTab = (tab) => {
-    alert("Aba " + tab + " selecionada. (Lógica de estoque/DRE segue o mesmo padrão)");
-};
-
-initMesas();
+// --- RENDERIZAÇÃO DAS MESAS ---
+onSnapshot(collection(db, "mesas"), (snapshot) => {
+    const grid = document.getElementById('mesaGrid');
+    if(grid) {
+        grid.innerHTML = '';
+        snapshot.docs.sort((a, b) => a.id - b.id).forEach(doc => {
+            const mesa = doc.data();
+            const div = document.createElement('div');
+            div.className = `mesa ${mesa.status}`;
+            div.innerHTML = `<h3>Mesa ${doc.id}</h3><p>${mesa.cliente || 'Livre'}</p><b>R$ ${(mesa.total || 0).toFixed(2)}</b>`;
+            div.onclick = () => window.gerenciarMesa(doc.id, mesa);
+            grid.appendChild(div);
+        });
+    }
+});
