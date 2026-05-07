@@ -157,3 +157,47 @@ onSnapshot(collection(db, "mesas"), (snapshot) => {
         }
     });
 });
+// --- FUNÇÃO PARA CADASTRAR CLIENTE ---
+window.cadastrarCliente = async () => {
+    const nome = prompt("Nome do Cliente:");
+    const fone = prompt("WhatsApp (DDD + Número):");
+    
+    if (nome && fone) {
+        await addDoc(collection(db, "clientes"), {
+            nome: nome,
+            contato: fone,
+            dataCadastro: new Date()
+        });
+        alert("Cliente cadastrado com sucesso!");
+        window.switchTab('clientes'); // Atualiza a tela
+    }
+};
+
+// --- ALTERNAR PARA ABA DE CLIENTES ---
+// Adicione este bloco dentro da sua função window.switchTab existente
+if (tab === 'clientes') {
+    const cSnap = await getDocs(collection(db, "clientes"));
+    let linhas = "";
+    cSnap.forEach(c => {
+        const d = c.data();
+        linhas += `<tr>
+            <td>${d.nome}</td>
+            <td>${d.contato}</td>
+            <td><button onclick="alert('Funcionalidade de editar em breve')">✏️</button></td>
+        </tr>`;
+    });
+
+    main.innerHTML = `
+        <div style="padding:20px;">
+            <h2>Cadastro de Clientes</h2>
+            <button onclick="window.cadastrarCliente()" style="background:#27ae60; color:white; padding:10px; border:none; border-radius:5px; margin-bottom:15px; cursor:pointer;">
+                + Novo Cliente
+            </button>
+            <table border="1" width="100%" style="border-collapse:collapse; background:white;">
+                <thead style="background:#ddd;">
+                    <tr><th>Nome</th><th>WhatsApp</th><th>Ações</th></tr>
+                </thead>
+                <tbody>${linhas}</tbody>
+            </table>
+        </div>`;
+}
