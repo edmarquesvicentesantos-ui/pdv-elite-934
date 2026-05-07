@@ -10,31 +10,27 @@
     <nav class="no-print">
         <div class="logo">Elite 934</div>
         <ul class="menu-tabs">
-            <li onclick="window.switchTab('mesas')" id="tab-mesas" class="active">Mesas</li>
-            <li onclick="window.switchTab('estoque')" id="tab-estoque">Estoque</li>
-            <li onclick="window.switchTab('boticario')" id="tab-boticario">Boticário</li>
-            <li onclick="window.switchTab('dre')" id="tab-dre">DRE</li>
+            <li onclick="window.switchTab('mesas')" class="active">Mesas</li>
+            <li onclick="window.switchTab('dre')">Financeiro</li>
         </ul>
     </nav>
 
-    <main id="main-content" class="no-print">
-        <div id="view-mesas">
-            <h2>Controle de Mesas</h2>
+    <div class="container-principal no-print">
+        <div class="lado-mesas">
+            <h2>Painel de Mesas</h2>
             <div class="grid-mesas" id="mesaGrid"></div>
         </div>
-        </main>
 
-    <div id="cupom" class="print-only">
-        <div style="text-align:center">
-            <strong>BOTECO & DISTRIBUIDORA 934</strong><br>
-            Petrolina - PE
+        <div class="lado-cupom">
+            <div class="ticket" id="preview-cupom">
+                <div class="ticket-header">
+                    <h3>BOTECO 934</h3>
+                    <p>Selecione uma mesa para ver o consumo</p>
+                </div>
+                <div id="conteudo-cupom">
+                    </div>
+            </div>
         </div>
-        <hr>
-        <div id="cupom-info"></div>
-        <hr>
-        <table id="cupom-itens" style="width:100%"></table>
-        <hr>
-        <div id="cupom-total" style="text-align:right; font-weight:bold"></div>
     </div>
 
     <script type="module" src="app.js"></script>
