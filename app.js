@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, setDoc, addDoc, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, setDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAuQzRvaOndn3AkRvuA1PD0S4Jb9kbOar4",
@@ -14,163 +14,103 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// --- GESTÃO DE MESAS E CLIENTES ---
-window.gerenciarMesa = async (id, dados) => {
-    if (dados.status === 'livre') {
-        const nome = prompt("Nome do Cliente/Mesa:");
-        const fone = prompt("WhatsApp do Cliente (Ex: 87999999999):");
-        if (nome) {
-            await updateDoc(doc(db, "mesas", id), { 
-                status: 'ocupada', 
-                cliente: nome, 
-                telefone: fone || '',
-                total: 0,
-                itens: [] 
-            });
-        }
-    } else {
-        const acao = confirm(`Deseja ADICIONAR PRODUTO (Ok) ou FECHAR CONTA (Cancelar) para ${dados.cliente}?`);
-        if (acao) {
-            adicionarProdutoMesa(id, dados);
-        } else {
-            fecharConta(id, dados);
-        }
-    }
-};
-
-// --- LANÇAR PRODUTO NA MESA & BAIXAR ESTOQUE ---
-async function adicionarProdutoMesa(id, dados) {
-    const prodNome = prompt("Nome do Produto (Ex: Cerveja):");
-    const valor = parseFloat(prompt("Valor (R$):"));
-    if (prodNome && valor) {
-        const novosItens = [...(dados.itens || []), { nome: prodNome, preco: valor }];
-        const novoTotal = (dados.total || 0) + valor;
-        await updateDoc(doc(db, "mesas", id), { itens: novosItens, total: novoTotal });
-        alert("Item lançado!");
-    }
-}
-
-// --- FECHAR CONTA E ENVIAR WHATSAPP ---
-async function fecharConta(id, dados) {
-    const numPessoas = parseInt(prompt("Dividir conta por quantas pessoas?", "1")) || 1;
-    const formaPagamento = prompt("Forma de Recebimento:\n1. Dinheiro\n2. C. Crédito\n3. C. Débito\n4. PIX\n5. PENDURA");
-    
-    const pagamentos = { "1": "Dinheiro", "2": "C. Crédito", "3": "C. Débito", "4": "PIX", "5": "PENDURA" };
-    const pgtoFinal = pagamentos[formaPagamento] || "Não Informado";
-
-    const total = dados.total || 0;
-    const valorPorPessoa = total / numPessoas;
-
-    // Montagem do Cupom Estilo Supermercado para WhatsApp
-    let cupomWpp = `*BOTECO 934 - RECIBO*%0A`;
-    cupomWpp += `MESA: ${id} | CLIENTE: ${dados.cliente}%0A`;
-    cupomWpp += `----------------------------%0A`;
-    dados.items.forEach(item => {
-        cupomWpp += `${item.nome.padEnd(15)} R$ ${item.preco.toFixed(2)}%0A`;
-    });
-    cupomWpp += `----------------------------%0A`;
-    cupomWpp += `*TOTAL GERAL: R$ ${total.toFixed(2)}*%0A`;
-    cupomWpp += `Dividido por: ${numPessoas} pessoa(s)%0A`;
-    cupomWpp += `*VALOR POR PESSOA: R$ ${valorPorPessoa.toFixed(2)}*%0A`;
-    cupomWpp += `Forma de Pago: ${pgtoFinal}%0A`;
-    cupomWpp += `----------------------------%0A`;
-    cupomWpp += `Obrigado pela preferência!`;
-
-    // 1. Enviar WhatsApp
-    if (dados.telefone) {
-        window.open(`https://api.whatsapp.com/send?phone=55${dados.telefone}&text=${cupomWpp}`, '_blank');
-    }
-
-    // 2. Imprimir Cupom (Preenche o HTML de impressão e dispara)
-    imprimirCupomFisico(id, dados, pgtoFinal, numPessoas, valorPorPessoa);
-
-    // 3. Registrar no DRE com a forma de pagamento
-    await addDoc(collection(db, "vendas"), {
-        data: new Date(),
-        cliente: dados.cliente,
-        total: total,
-        pagamento: pgtoFinal,
-        dividido: numPessoas
-    });
-
-    // 4. Liberar Mesa
-    await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
-}    
-    // 1. Gerar link do WhatsApp
-    if (dados.telefone) {
-        const msg = `*BOTECO 934 - RECIBO*%0ACliente: ${dados.cliente}%0A--------------------%0A${listaItens}%0A--------------------%0A*TOTAL: R$ ${total.toFixed(2)}*%0A_Obrigado pela preferência!_`;
-        window.open(`https://api.whatsapp.com/send?phone=55${dados.telefone}&text=${msg}`, '_blank');
-    }
-
-    // 2. Registrar no Financeiro (DRE/Caixa)
-    await addDoc(collection(db, "vendas"), {
-        data: new Date(),
-        cliente: dados.cliente,
-        total: total,
-        itens: dados.itens
-    });
-
-    // 3. Liberar Mesa
-    await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
-    alert("Conta fechada e enviada para o caixa!");
-}
-
-// --- RENDERIZAÇÃO DAS MESAS ---
-onSnapshot(collection(db, "mesas"), (snapshot) => {
-    const grid = document.getElementById('mesaGrid');
-    if(grid) {
-        grid.innerHTML = '';
-        snapshot.docs.sort((a, b) => a.id - b.id).forEach(doc => {
-            const mesa = doc.data();
-            const div = document.createElement('div');
-            div.className = `mesa ${mesa.status}`;
-            div.innerHTML = `<h3>Mesa ${doc.id}</h3><p>${mesa.cliente || 'Livre'}</p><b>R$ ${(mesa.total || 0).toFixed(2)}</b>`;
-            div.onclick = () => window.gerenciarMesa(doc.id, mesa);
-            grid.appendChild(div);
-        });
-    }
-});
-// ... (mantenha o topo com as chaves do Firebase igual)
-
+// --- GERENCIAR MESA ---
 window.gerenciarMesa = async (id, dados) => {
     if (dados.status === 'livre') {
         const nome = prompt("Nome do Cliente:");
-        const fone = prompt("WhatsApp (apenas números com DDD):");
+        const fone = prompt("WhatsApp (Ex: 87999999999):");
         if (nome) {
-            await updateDoc(doc(db, "mesas", id), { 
-                status: 'ocupada', 
-                cliente: nome, 
-                telefone: fone || '',
-                total: 0,
-                itens: [] 
-            });
+            await updateDoc(doc(db, "mesas", id), { status: 'ocupada', cliente: nome, telefone: fone || '', total: 0, itens: [] });
         }
     } else {
-        // MENU DE OPÇÕES DA MESA
-        const opcao = prompt("MESA " + id + " - " + dados.cliente + "\n\n1. Lançar Produto\n2. Ver Consumo Atual\n3. Finalizar e Enviar WhatsApp\n4. Liberar Mesa (Sair sem salvar)");
-
-        if (opcao === "1") {
-            const prod = prompt("Produto:");
-            const valor = parseFloat(prompt("Valor R$:"));
-            if (prod && !isNaN(valor)) {
-                const novosItens = [...(dados.itens || []), { nome: prod, preco: valor, data: new Date() }];
-                const novoTotal = (dados.total || 0) + valor;
-                await updateDoc(doc(db, "mesas", id), { itens: novosItens, total: novoTotal });
-                alert("Lançado!");
+        const menu = prompt(`MESA ${id} - ${dados.cliente}\n\n1. Lançar Produto\n2. Fechar Conta (Cupom/WhatsApp)\n3. Liberar Mesa (Sair sem salvar)`);
+        
+        if (menu === "1") {
+            const prod = prompt("Nome do Produto:");
+            const qtd = parseInt(prompt("Quantidade:", "1")) || 1;
+            const preco = parseFloat(prompt("Preço Unitário R$:"));
+            if (prod && preco) {
+                const itemTotal = qtd * preco;
+                const novosItens = [...(dados.itens || []), { nome: prod, qtd: qtd, preco: preco, total: itemTotal }];
+                await updateDoc(doc(db, "mesas", id), { itens: novosItens, total: (dados.total || 0) + itemTotal });
             }
-        } else if (opcao === "2") {
-            const lista = dados.itens.map(i => i.nome + ": R$ " + i.total).join("\n");
-            alert("Consumo atual de " + dados.cliente + ":\n\n" + (lista || "Nenhum item") + "\n\nTOTAL: R$ " + dados.total.toFixed(2));
-        } else if (opcao === "3") {
-            if (confirm("Confirmar fechamento da conta de " + dados.cliente + "?")) {
-                fecharConta(id, dados);
-            }
-        } else if (opcao === "4") {
-             if(confirm("Deseja realmente limpar a mesa sem salvar a venda?")) {
-                await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
-             }
+        } else if (menu === "2") {
+            finalizarVenda(id, dados);
+        } else if (menu === "3") {
+            if(confirm("Limpar mesa?")) await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
         }
     }
 };
 
-// ... (mantenha a função fecharConta e o onSnapshot de renderizar mesas)
+// --- FINALIZAR E GERAR CUPOM ---
+async function finalizarVenda(id, dados) {
+    const pessoas = parseInt(prompt("Dividir para quantas pessoas?", "1")) || 1;
+    const pag = prompt("Forma de Pagamento:\n1. Dinheiro\n2. Pix\n3. Cartão Crédito\n4. Cartão Débito\n5. PENDURA");
+    const formas = {"1":"Dinheiro", "2":"Pix", "3":"Crédito", "4":"Débito", "5":"PENDURA"};
+    const formaEscolhida = formas[pag] || "Outros";
+
+    const totalGeral = dados.total;
+    const porPessoa = totalGeral / pessoas;
+
+    // Gerar Cupom para WhatsApp
+    let cupom = `*--- BOTECO 934 ---*%0A*RECIBO DE VENDA*%0A%0A`;
+    cupom += `Mesa: ${id} | Cliente: ${dados.cliente}%0A`;
+    cupom += `----------------------------%0A`;
+    dados.itens.forEach(i => {
+        cupom += `${i.qtd}x ${i.nome.padEnd(12)} R$ ${i.total.toFixed(2)}%0A`;
+    });
+    cupom += `----------------------------%0A`;
+    cupom += `*TOTAL: R$ ${totalGeral.toFixed(2)}*%0A`;
+    if(pessoas > 1) cupom += `Dividido p/ ${pessoas}: R$ ${porPessoa.toFixed(2)} cada%0A`;
+    cupom += `Pagamento: ${formaEscolhida}%0A%0A`;
+    cupom += `*Obrigado pela preferência!*`;
+
+    // Enviar WhatsApp
+    if (dados.telefone) window.open(`https://api.whatsapp.com/send?phone=55${dados.telefone}&text=${cupom}`, '_blank');
+
+    // Salvar no Financeiro (DRE)
+    await addDoc(collection(db, "vendas"), {
+        data: new Date(),
+        cliente: dados.cliente,
+        total: totalGeral,
+        forma: formaEscolhida,
+        itens: dados.itens
+    });
+
+    // Limpar Mesa
+    await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
+}
+
+// --- RENDERIZAR MESAS ---
+onSnapshot(collection(db, "mesas"), (snapshot) => {
+    const grid = document.getElementById('mesaGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    snapshot.docs.sort((a,b) => a.id - b.id).forEach(doc => {
+        const m = doc.data();
+        grid.innerHTML += `<div class="mesa ${m.status}" onclick='gerenciarMesa("${doc.id}", ${JSON.stringify(m)})'>
+            <h3>Mesa ${doc.id}</h3>
+            <p>${m.cliente || 'Livre'}</p>
+            <b>R$ ${(m.total || 0).toFixed(2)}</b>
+        </div>`;
+    });
+});
+
+// --- ALTERNAR ABAS (DRE / ESTOQUE) ---
+window.switchTab = async (tab) => {
+    const main = document.getElementById('main-content');
+    if (tab === 'mesas') location.reload();
+    if (tab === 'dre') {
+        const vSnap = await getDocs(collection(db, "vendas"));
+        let t = 0;
+        let linhas = "";
+        vSnap.forEach(v => {
+            const d = v.data();
+            t += d.total;
+            linhas += `<tr><td>${d.cliente}</td><td>${d.forma}</td><td>R$ ${d.total.toFixed(2)}</td></tr>`;
+        });
+        main.innerHTML = `<h2>Financeiro</h2><h3 style="color:green">Total em Caixa: R$ ${t.toFixed(2)}</h3>
+        <table border="1" width="100%" style="border-collapse:collapse; text-align:left">
+        <thead><tr><th>Cliente</th><th>Pagamento</th><th>Valor</th></tr></thead><tbody>${linhas}</tbody></table>`;
+    }
+};
