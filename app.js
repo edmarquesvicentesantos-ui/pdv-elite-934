@@ -124,6 +124,7 @@ window.fecharContaManual = async (id) => {
 };
 
 // --- ATUALIZAÇÃO AUTOMÁTICA DA TELA ---
+// --- RENDERIZAÇÃO DAS MESAS E ATUALIZAÇÃO AUTOMÁTICA ---
 onSnapshot(collection(db, "mesas"), (snapshot) => {
     const grid = document.getElementById('mesaGrid');
     if(!grid) return;
@@ -131,6 +132,8 @@ onSnapshot(collection(db, "mesas"), (snapshot) => {
     
     snapshot.docs.sort((a,b) => parseInt(a.id) - parseInt(b.id)).forEach(docSnap => {
         const m = docSnap.data();
+        
+        // Verifica se esta é a mesa que você clicou por último
         const destaque = (mesaAtivaId === docSnap.id) ? 'border: 3px solid #3498db;' : '';
         
         grid.innerHTML += `
@@ -140,6 +143,14 @@ onSnapshot(collection(db, "mesas"), (snapshot) => {
                 <b>R$ ${(m.total || 0).toFixed(2)}</b>
             </div>`;
         
+        // --- A MÁGICA ESTÁ AQUI ---
+        // Se a mesa que acabou de atualizar no banco for a mesa que você está olhando, 
+        // ela força o cupom branco a atualizar os itens na hora!
+        if (mesaAtivaId === docSnap.id) {
+            atualizarVisualCupom(docSnap.id, m);
+        }
+    });
+});        
         // Se a mesa alterada for a que você está olhando, atualiza o cupom na hora!
         if (mesaAtivaId === docSnap.id) {
             atualizarVisualCupom(docSnap.id, m);
