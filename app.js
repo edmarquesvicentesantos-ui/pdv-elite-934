@@ -201,3 +201,17 @@ if (tab === 'clientes') {
             </table>
         </div>`;
 }
+    main.innerHTML = `
+        <div style="padding:20px;">
+            <h2>Cadastro de Clientes</h2>
+            <button onclick="window.cadastrarCliente()" style="background:#27ae60; color:white; padding:10px; border:none; border-radius:5px; margin-bottom:15px; cursor:pointer;">
+                + Novo Cliente
+            </button>
+            <table border="1" width="100%" style="border-collapse:collapse; background:white;">
+                <thead style="background:#ddd;">
+                    <tr><th>Nome</th><th>WhatsApp</th><th>Ações</th></tr>
+                </thead>
+                <tbody>${linhas}</tbody>
+            </table>
+        </div>`;
+}
