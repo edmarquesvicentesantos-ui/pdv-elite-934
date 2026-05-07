@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, setDoc, addDoc, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAuQzRvaOndn3AkRvuA1PD0S4Jb9kbOar4",
@@ -14,115 +14,132 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// FUNÇÃO PARA GERENCIAR A MESA (CHAMADA PELO CLIQUE)
+let mesaAtivaId = null;
+
+// --- ESTA FUNÇÃO É QUE VAI "ESCREVER" NO CUPOM LATERAL ---
+function atualizarVisualCupom(id, dados) {
+    const conteudo = document.getElementById('conteudo-cupom');
+    if (!conteudo) return;
+
+    if (!dados || dados.status === 'livre') {
+        conteudo.innerHTML = `<div style="text-align:center; color:#999; margin-top:50px;">
+                                <p>BOTECO 934</p>
+                                <p>Selecione uma mesa para ver o consumo</p>
+                              </div>`;
+        return;
+    }
+
+    // Monta a lista de itens no estilo supermercado
+    let itensHTML = `<div style="text-align:center"><strong>MESA ${id} - ${dados.cliente.toUpperCase()}</strong></div><hr style="border-top: 1px dashed #000">`;
+    
+    if (dados.itens && dados.itens.length > 0) {
+        dados.itens.forEach(i => {
+            itensHTML += `
+                <div style="display:flex; justify-content:space-between; font-size:0.9em; margin-bottom:5px;">
+                    <span>${i.qtd}x ${i.nome}</span>
+                    <span>R$ ${i.total.toFixed(2)}</span>
+                </div>`;
+        });
+    } else {
+        itensHTML += `<p style="text-align:center; color:gray">Nenhum item lançado</p>`;
+    }
+
+    itensHTML += `
+        <hr style="border-top: 2px solid #000">
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2em;">
+            <span>TOTAL:</span>
+            <span>R$ ${(dados.total || 0).toFixed(2)}</span>
+        </div>
+        <button class="btn-fechar" style="background:#27ae60; color:white; width:100%; padding:10px; border:none; border-radius:5px; margin-top:15px; cursor:pointer; font-weight:bold;" 
+                onclick="window.fecharContaManual('${id}')">
+            FECHAR CONTA / PAGAR
+        </button>
+    `;
+    conteudo.innerHTML = itensHTML;
+}
+
+// --- CLIQUE NA MESA ---
 window.gerenciarMesa = async (id) => {
+    mesaAtivaId = id;
     const mesaRef = doc(db, "mesas", id);
     const mesaSnap = await getDoc(mesaRef);
     const dados = mesaSnap.data();
 
     if (dados.status === 'livre') {
-        const nome = prompt("Nome do Cliente:");
-        const fone = prompt("WhatsApp (DDD + Número):");
+        const nome = prompt("Nome do Cliente para a Mesa " + id + ":");
         if (nome) {
-            await updateDoc(mesaRef, { status: 'ocupada', cliente: nome, telefone: fone || '', total: 0, itens: [] });
+            await updateDoc(mesaRef, { status: 'ocupada', cliente: nome, total: 0, itens: [] });
         }
     } else {
-        const menu = prompt(`MESA ${id} - Cliente: ${dados.cliente}\nTotal Atual: R$ ${dados.total.toFixed(2)}\n\n1. Lançar Produto\n2. Ver Pedidos/Itens\n3. Fechar Conta (Cupom/WhatsApp)\n4. Limpar Mesa`);
+        // Mostra o cupom lateral imediatamente ao clicar
+        atualizarVisualCupom(id, dados);
+
+        const acao = prompt(`MESA ${id} - ${dados.cliente}\n1. Lançar Produto\n2. Limpar Mesa (Sair sem Salvar)`);
         
-        if (menu === "1") {
+        if (acao === "1") {
             const prod = prompt("Produto:");
+            const preco = parseFloat(prompt("Preço R$:"));
             const qtd = parseInt(prompt("Quantidade:", "1")) || 1;
-            const preco = parseFloat(prompt("Preço Unitário:"));
+            
             if (prod && preco) {
-                const totalItem = qtd * preco;
-                const novosItens = [...(dados.itens || []), { nome: prod, qtd: qtd, preco: preco, total: totalItem }];
-                await updateDoc(mesaRef, { itens: novosItens, total: (dados.total || 0) + totalItem });
-                alert("Item adicionado!");
+                const itemTotal = preco * qtd;
+                const novosItens = [...(dados.itens || []), { nome: prod, preco: preco, qtd: qtd, total: itemTotal }];
+                await updateDoc(mesaRef, { 
+                    itens: novosItens, 
+                    total: (dados.total || 0) + itemTotal 
+                });
             }
-        } else if (menu === "2") {
-            let lista = `ITENS DA MESA ${id}:\n`;
-            dados.itens.forEach(i => lista += `${i.qtd}x ${i.nome} - R$ ${i.total.toFixed(2)}\n`);
-            alert(lista + `\nTOTAL: R$ ${dados.total.toFixed(2)}`);
-        } else if (menu === "3") {
-            finalizarVenda(id, dados);
-        } else if (menu === "4") {
-            if(confirm("Deseja zerar a mesa sem salvar?")) await updateDoc(mesaRef, { status: 'livre', cliente: '', total: 0, itens: [] });
+        } else if (acao === "2") {
+            if(confirm("Deseja zerar esta mesa?")) {
+                await updateDoc(mesaRef, { status: 'livre', cliente: '', total: 0, itens: [] });
+                atualizarVisualCupom(null, null);
+            }
         }
     }
 };
 
-// FUNÇÃO DE FECHAMENTO (O CUPOM ESTILO SUPERMERCADO)
-async function finalizarVenda(id, dados) {
-    const pessoas = parseInt(prompt("Dividir por quantas pessoas?", "1")) || 1;
-    const pag = prompt("Forma de Pagamento:\n1. Dinheiro\n2. Pix\n3. Cartão\n4. PENDURA");
+// --- FECHAR CONTA ---
+window.fecharContaManual = async (id) => {
+    const mesaRef = doc(db, "mesas", id);
+    const dados = (await getDoc(mesaRef)).data();
+    
+    const pag = prompt("FORMA DE PAGAMENTO:\n1. Dinheiro\n2. Pix\n3. Cartão\n4. PENDURA");
     const formas = {"1":"Dinheiro", "2":"Pix", "3":"Cartão", "4":"PENDURA"};
-    const formaEscolhida = formas[pag] || "Dinheiro";
+    const f = formas[pag] || "Dinheiro";
 
-    const total = dados.total;
-    const porPessoa = total / pessoas;
-
-    // MONTAGEM DO CUPOM
-    let cupomWpp = `*--- BOTECO 934 ---*%0A`;
-    cupomWpp += `Mesa: ${id} | Cliente: ${dados.cliente}%0A`;
-    cupomWpp += `----------------------------%0A`;
-    dados.itens.forEach(i => {
-        cupomWpp += `${i.qtd}x ${i.nome.padEnd(12)} R$ ${i.total.toFixed(2)}%0A`;
-    });
-    cupomWpp += `----------------------------%0A`;
-    cupomWpp += `*TOTAL GERAL: R$ ${total.toFixed(2)}*%0A`;
-    if(pessoas > 1) cupomWpp += `Dividido p/ ${pessoas}: R$ ${porPessoa.toFixed(2)} cada%0A`;
-    cupomWpp += `Pagamento: ${formaEscolhida}%0A`;
-    cupomWpp += `----------------------------%0A`;
-    cupomWpp += `Obrigado pela preferência!`;
-
-    // 1. Enviar WhatsApp
-    if (dados.telefone) window.open(`https://api.whatsapp.com/send?phone=55${dados.telefone}&text=${cupomWpp}`, '_blank');
-    else alert("Cliente sem WhatsApp cadastrado. Venda salva no sistema.");
-
-    // 2. Salvar no DRE
+    // Salva no financeiro (DRE)
     await addDoc(collection(db, "vendas"), {
         data: new Date(),
         cliente: dados.cliente,
-        total: total,
-        forma: formaEscolhida
+        total: dados.total,
+        forma: f
     });
 
-    // 3. Limpar Mesa
-    await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
-    alert("Conta fechada com sucesso!");
-}
+    alert("Venda Registrada! R$ " + dados.total.toFixed(2));
+    await updateDoc(mesaRef, { status: 'livre', cliente: '', total: 0, itens: [] });
+    atualizarVisualCupom(null, null);
+};
 
-// RENDERIZAR MESAS NA TELA
+// --- RENDERIZAÇÃO DAS MESAS E ATUALIZAÇÃO AUTOMÁTICA ---
 onSnapshot(collection(db, "mesas"), (snapshot) => {
     const grid = document.getElementById('mesaGrid');
     if(!grid) return;
     grid.innerHTML = '';
+    
     snapshot.docs.sort((a,b) => parseInt(a.id) - parseInt(b.id)).forEach(docSnap => {
         const m = docSnap.data();
-        const cor = m.status === 'ocupada' ? 'style="border-color: red; background: #fff5f5;"' : '';
+        const border = (mesaAtivaId === docSnap.id) ? 'border: 3px solid #3498db;' : '';
+        
         grid.innerHTML += `
-            <div class="mesa" ${cor} onclick="window.gerenciarMesa('${docSnap.id}')">
+            <div class="mesa ${m.status}" style="${border}" onclick="window.gerenciarMesa('${docSnap.id}')">
                 <h3>Mesa ${docSnap.id}</h3>
                 <p>${m.cliente || 'Livre'}</p>
                 <b>R$ ${(m.total || 0).toFixed(2)}</b>
             </div>`;
+        
+        // Se a mesa alterada for a que estamos a ver, o cupom atualiza sozinho!
+        if (mesaAtivaId === docSnap.id) {
+            atualizarVisualCupom(docSnap.id, m);
+        }
     });
 });
-
-// ABA FINANCEIRO (DRE)
-window.switchTab = async (tab) => {
-    const main = document.getElementById('main-content');
-    if (tab === 'mesas') location.reload();
-    if (tab === 'dre') {
-        const vSnap = await getDocs(collection(db, "vendas"));
-        let total = 0;
-        let html = `<h2>Financeiro (DRE)</h2><table border="1" width="100%" style="border-collapse:collapse">
-                    <tr style="background:#ddd"><th>Cliente</th><th>Pgto</th><th>Valor</th></tr>`;
-        vSnap.forEach(v => {
-            const d = v.data();
-            total += d.total;
-            html += `<tr><td>${d.cliente}</td><td>${d.forma}</td><td>R$ ${d.total.toFixed(2)}</td></tr>`;
-        });
-        main.innerHTML = html + `</table><h3 style="color:green">Total em Caixa: R$ ${total.toFixed(2)}</h3>`;
-    }
-};
