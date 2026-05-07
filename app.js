@@ -89,3 +89,47 @@ onSnapshot(collection(db, "mesas"), (snapshot) => {
         });
     }
 });
+// ... (mantenha o topo com as chaves do Firebase igual)
+
+window.gerenciarMesa = async (id, dados) => {
+    if (dados.status === 'livre') {
+        const nome = prompt("Nome do Cliente:");
+        const fone = prompt("WhatsApp (apenas números com DDD):");
+        if (nome) {
+            await updateDoc(doc(db, "mesas", id), { 
+                status: 'ocupada', 
+                cliente: nome, 
+                telefone: fone || '',
+                total: 0,
+                itens: [] 
+            });
+        }
+    } else {
+        // MENU DE OPÇÕES DA MESA
+        const opcao = prompt("MESA " + id + " - " + dados.cliente + "\n\n1. Lançar Produto\n2. Ver Consumo Atual\n3. Finalizar e Enviar WhatsApp\n4. Liberar Mesa (Sair sem salvar)");
+
+        if (opcao === "1") {
+            const prod = prompt("Produto:");
+            const valor = parseFloat(prompt("Valor R$:"));
+            if (prod && !isNaN(valor)) {
+                const novosItens = [...(dados.itens || []), { nome: prod, preco: valor, data: new Date() }];
+                const novoTotal = (dados.total || 0) + valor;
+                await updateDoc(doc(db, "mesas", id), { itens: novosItens, total: novoTotal });
+                alert("Lançado!");
+            }
+        } else if (opcao === "2") {
+            const lista = dados.itens.map(i => i.nome + ": R$ " + i.total).join("\n");
+            alert("Consumo atual de " + dados.cliente + ":\n\n" + (lista || "Nenhum item") + "\n\nTOTAL: R$ " + dados.total.toFixed(2));
+        } else if (opcao === "3") {
+            if (confirm("Confirmar fechamento da conta de " + dados.cliente + "?")) {
+                fecharConta(id, dados);
+            }
+        } else if (opcao === "4") {
+             if(confirm("Deseja realmente limpar a mesa sem salvar a venda?")) {
+                await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
+             }
+        }
+    }
+};
+
+// ... (mantenha a função fecharConta e o onSnapshot de renderizar mesas)
