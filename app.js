@@ -52,9 +52,50 @@ async function adicionarProdutoMesa(id, dados) {
 
 // --- FECHAR CONTA E ENVIAR WHATSAPP ---
 async function fecharConta(id, dados) {
-    const total = dados.total || 0;
-    const listaItens = dados.itens.map(i => `• ${i.nome}: R$ ${i.preco.toFixed(2)}`).join('%0A');
+    const numPessoas = parseInt(prompt("Dividir conta por quantas pessoas?", "1")) || 1;
+    const formaPagamento = prompt("Forma de Recebimento:\n1. Dinheiro\n2. C. Crédito\n3. C. Débito\n4. PIX\n5. PENDURA");
     
+    const pagamentos = { "1": "Dinheiro", "2": "C. Crédito", "3": "C. Débito", "4": "PIX", "5": "PENDURA" };
+    const pgtoFinal = pagamentos[formaPagamento] || "Não Informado";
+
+    const total = dados.total || 0;
+    const valorPorPessoa = total / numPessoas;
+
+    // Montagem do Cupom Estilo Supermercado para WhatsApp
+    let cupomWpp = `*BOTECO 934 - RECIBO*%0A`;
+    cupomWpp += `MESA: ${id} | CLIENTE: ${dados.cliente}%0A`;
+    cupomWpp += `----------------------------%0A`;
+    dados.items.forEach(item => {
+        cupomWpp += `${item.nome.padEnd(15)} R$ ${item.preco.toFixed(2)}%0A`;
+    });
+    cupomWpp += `----------------------------%0A`;
+    cupomWpp += `*TOTAL GERAL: R$ ${total.toFixed(2)}*%0A`;
+    cupomWpp += `Dividido por: ${numPessoas} pessoa(s)%0A`;
+    cupomWpp += `*VALOR POR PESSOA: R$ ${valorPorPessoa.toFixed(2)}*%0A`;
+    cupomWpp += `Forma de Pago: ${pgtoFinal}%0A`;
+    cupomWpp += `----------------------------%0A`;
+    cupomWpp += `Obrigado pela preferência!`;
+
+    // 1. Enviar WhatsApp
+    if (dados.telefone) {
+        window.open(`https://api.whatsapp.com/send?phone=55${dados.telefone}&text=${cupomWpp}`, '_blank');
+    }
+
+    // 2. Imprimir Cupom (Preenche o HTML de impressão e dispara)
+    imprimirCupomFisico(id, dados, pgtoFinal, numPessoas, valorPorPessoa);
+
+    // 3. Registrar no DRE com a forma de pagamento
+    await addDoc(collection(db, "vendas"), {
+        data: new Date(),
+        cliente: dados.cliente,
+        total: total,
+        pagamento: pgtoFinal,
+        dividido: numPessoas
+    });
+
+    // 4. Liberar Mesa
+    await updateDoc(doc(db, "mesas", id), { status: 'livre', cliente: '', total: 0, itens: [] });
+}    
     // 1. Gerar link do WhatsApp
     if (dados.telefone) {
         const msg = `*BOTECO 934 - RECIBO*%0ACliente: ${dados.cliente}%0A--------------------%0A${listaItens}%0A--------------------%0A*TOTAL: R$ ${total.toFixed(2)}*%0A_Obrigado pela preferência!_`;
