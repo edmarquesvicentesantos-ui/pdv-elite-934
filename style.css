@@ -1,29 +1,22 @@
-:root { --primary: #1a2a3a; --bg: #f0f2f5; }
-body { font-family: sans-serif; margin: 0; background: var(--bg); }
+:root { --primary: #1a2a3a; --bg: #f0f2f5; --success: #27ae60; }
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); }
 
-nav { background: var(--primary); color: white; display: flex; padding: 10px 20px; justify-content: space-between; }
-.menu-tabs { display: flex; list-style: none; gap: 15px; cursor: pointer; }
+nav { background: var(--primary); color: white; display: flex; padding: 10px 20px; justify-content: space-between; align-items: center; }
+.menu-tabs { display: flex; list-style: none; gap: 20px; cursor: pointer; margin: 0; }
+.menu-tabs li:hover { color: #3498db; }
 
-/* DIVISÃO DA TELA */
 .container-principal { display: flex; height: calc(100vh - 60px); }
 .lado-mesas { flex: 2; padding: 20px; overflow-y: auto; border-right: 2px solid #ddd; }
-.lado-cupom { flex: 1; padding: 20px; background: #e2e2e2; display: flex; justify-content: center; }
+.lado-cupom { flex: 1; padding: 20px; background: #d1d1d1; display: flex; justify-content: center; }
 
-/* GRID DE MESAS */
-.grid-mesas { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
-.mesa { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 8px; text-align: center; cursor: pointer; }
+.grid-mesas { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+.mesa { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
 .mesa.ocupada { border-color: #e74c3c; background: #fff5f5; }
+.mesa h3 { margin: 0 0 10px 0; }
 
-/* ESTILO DO CUPOM */
-.ticket { 
-    width: 300px; background: white; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    font-family: 'Courier New', monospace; height: fit-content; min-height: 400px;
-}
-.ticket-header { text-align: center; border-bottom: 1px dashed #000; margin-bottom: 10px; }
-.item-linha { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
-.total-cupom { border-top: 2px solid #000; margin-top: 10px; padding-top: 10px; font-weight: bold; font-size: 18px; }
+.ticket { width: 320px; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); height: fit-content; min-height: 450px; border-radius: 2px; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+th { background: #eee; }
 
-.btn-fechar { 
-    width: 100%; padding: 12px; background: #27ae60; color: white; 
-    border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; font-weight: bold;
-}
+.btn-add { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
