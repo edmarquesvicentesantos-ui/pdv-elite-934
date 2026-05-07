@@ -10,27 +10,26 @@
     <nav class="no-print">
         <div class="logo">Elite 934</div>
         <ul class="menu-tabs">
-            <li onclick="window.switchTab('mesas')" class="active">Mesas</li>
+            <li onclick="window.switchTab('mesas')">Mesas</li>
+            <li onclick="window.switchTab('clientes')">Clientes</li>
             <li onclick="window.switchTab('dre')">Financeiro</li>
-           <li onclick="window.switchTab('clientes')">Clientes</li>
-</ul>
         </ul>
     </nav>
 
-    <div class="container-principal no-print">
+    <div id="main-content" class="container-principal no-print">
         <div class="lado-mesas">
             <h2>Painel de Mesas</h2>
             <div class="grid-mesas" id="mesaGrid"></div>
         </div>
 
         <div class="lado-cupom">
-            <div class="ticket" id="preview-cupom">
-                <div class="ticket-header">
-                    <h3>BOTECO 934</h3>
-                    <p>Selecione uma mesa para ver o consumo</p>
-                </div>
+            <div class="ticket">
                 <div id="conteudo-cupom">
+                    <div style="text-align:center; color:#999; margin-top:50px;">
+                        <p><strong>BOTECO 934</strong></p>
+                        <p>Selecione uma mesa para ver o consumo</p>
                     </div>
+                </div>
             </div>
         </div>
     </div>
