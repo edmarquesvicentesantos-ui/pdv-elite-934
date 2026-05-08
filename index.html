@@ -2,104 +2,50 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>PDV Boteco 934</title>
-
-<style>
-body{
-  font-family: Arial;
-  background:#f4f6f9;
-  margin:0;
-}
-.topo{
-  background:#1f2d3d;
-  color:#fff;
-  padding:15px;
-  font-size:22px;
-}
-.container{
-  display:flex;
-  padding:20px;
-}
-.produtos{
-  width:65%;
-}
-.comanda{
-  width:35%;
-  background:#fff;
-  padding:15px;
-  border-radius:8px;
-  box-shadow:0 0 10px #ccc;
-}
-.btn{
-  background:#27ae60;
-  border:none;
-  padding:15px;
-  color:#fff;
-  margin:8px;
-  border-radius:8px;
-  font-size:18px;
-  cursor:pointer;
-}
-.btn:hover{ background:#219150; }
-
-.tabela{
-  width:100%;
-  margin-top:10px;
-}
-.tabela td{ padding:5px; }
-
-.finalizar{
-  width:100%;
-  padding:15px;
-  margin-top:10px;
-  border:none;
-  border-radius:8px;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-}
-.fechar{ background:#e74c3c; }
-.dividir{ background:#3498db; }
-</style>
-
+<title>PDV Boteco</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="topo">🍺 PDV Boteco 934</div>
+<!-- MENU SUPERIOR -->
+<div class="topo">
+    <button onclick="alert('Cadastro de Clientes em breve')">Clientes</button>
+    <button onclick="alert('Controle de Mesas em breve')">Mesas</button>
+    <button onclick="alert('Cadastro de Produtos em breve')">Produtos</button>
+    <button onclick="alert('Financeiro em breve')">Financeiro</button>
+</div>
 
 <div class="container">
 
-<div class="produtos">
-<h2>Produtos</h2>
+    <!-- PRODUTOS -->
+    <div class="produtos">
+        <h2>Produtos</h2>
+        <button onclick="adicionarProduto('Amstel',5)">🍺 Amstel</button>
+        <button onclick="adicionarProduto('Heineken',7)">🍺 Heineken</button>
+        <button onclick="adicionarProduto('Skol',4)">🍺 Skol</button>
+        <button onclick="adicionarProduto('Refrigerante',5)">🥤 Refri</button>
+        <button onclick="adicionarProduto('Água',3)">💧 Água</button>
+    </div>
 
-<button class="btn" onclick="addItem('Amstel',6)">Amstel</button>
-<button class="btn" onclick="addItem('Heineken',8)">Heineken</button>
-<button class="btn" onclick="addItem('Skol',5)">Skol</button>
-<button class="btn" onclick="addItem('Refri',4)">Refri</button>
-<button class="btn" onclick="addItem('Água',3)">Água</button>
+    <!-- CUPOM -->
+    <div class="ticket">
+        <h2>CUPOM</h2>
+        <div id="listaCupom"></div>
+
+        <h3>Total: <span id="total">R$ 0.00</span></h3>
+
+        <div class="pagamentos">
+            <button onclick="pagar('Dinheiro')">💵 Dinheiro</button>
+            <button onclick="pagar('Pix')">📲 Pix</button>
+            <button onclick="pagar('Débito')">💳 Débito</button>
+            <button onclick="pagar('Crédito')">💳 Crédito</button>
+            <button onclick="pendurar()">🧾 Pendura</button>
+        </div>
+    </div>
 
 </div>
 
-<div class="comanda">
-
-<h3>Clientes da mesa</h3>
-<input id="clienteNome" placeholder="Nome do cliente">
-<button onclick="addCliente()">+ Cliente</button>
-
-<select id="clientes"></select>
-
-<table class="tabela" id="lista"></table>
-
-<h3 id="total">Total: R$ 0</h3>
-
-<button class="finalizar dividir" onclick="dividir()">Dividir Conta</button>
-<button class="finalizar fechar" onclick="fechar()">Fechar Mesa</button>
-
-</div>
-</div>
-
-<script src="firebase-config.js"></script>
 <script src="app.js"></script>
-<script src="menu.js"></script>
 </body>
 </html>
