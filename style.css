@@ -1,27 +1,22 @@
 :root { --primary: #1a2a3a; --bg: #f0f2f5; --success: #27ae60; }
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; background: var(--bg); }
+body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); }
 
 nav { background: var(--primary); color: white; display: flex; padding: 10px 20px; justify-content: space-between; align-items: center; }
 .menu-tabs { display: flex; list-style: none; gap: 20px; cursor: pointer; margin: 0; }
-.menu-tabs li:hover { color: #3498db; }
 
-.container-principal { display: flex; height: calc(100vh - 60px); }
+.container-principal { display: flex; height: calc(100vh - 60px); width: 100%; }
 .lado-mesas { flex: 2; padding: 20px; overflow-y: auto; border-right: 2px solid #ddd; }
-.lado-cupom { flex: 1; padding: 20px; background: #d1d1d1; display: flex; justify-content: center; }
+.lado-cupom { flex: 1; padding: 20px; background: #e0e0e0; display: flex; justify-content: center; }
 
-.grid-mesas { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
-.mesa { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; transition: 0.3s; }
+.grid-mesas { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 20px; }
+.mesa { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; }
 .mesa.ocupada { border-color: #e74c3c; background: #fff5f5; }
-.mesa h3 { margin: 0 0 10px 0; }
 
-.ticket { width: 320px; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); height: fit-content; min-height: 450px; border-radius: 2px; }
-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+.ticket { width: 320px; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); height: fit-content; min-height: 500px; font-family: 'Courier New', monospace; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
 th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-th { background: #eee; }
 
-.btn-add { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-#main-content { display: flex; width: 100%; }
-.lado-mesas { flex: 2; padding: 20px; }
-.lado-cupom { flex: 1; padding: 20px; background: #ddd; }
-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
-th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+.btn-add { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.btn-fechar { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+
+#barcode { max-width: 100%; height: auto; }
