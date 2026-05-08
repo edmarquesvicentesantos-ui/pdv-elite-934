@@ -145,3 +145,25 @@ function atualizarVisualCupom(id, dados) {
 
 // Início padrão
 window.switchTab('mesas');
+function atualizarVisualCupom(id, dados) {
+    const conteudo = document.getElementById('conteudo-cupom');
+    if (!conteudo) return;
+
+    // ... (mantenha o código que já tem dos itens e total)
+
+    let cupomHTML = `
+        <div style="text-align:center; margin-top:20px;">
+            <svg id="barcode"></svg> </div>
+    `;
+
+    conteudo.innerHTML = cupomHTML;
+
+    // Este comando transforma o número da mesa ou do pedido em código de barras
+    JsBarcode("#barcode", id, {
+        format: "CODE128",
+        lineColor: "#000",
+        width: 2,
+        height: 40,
+        displayValue: true
+    });
+}
