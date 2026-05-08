@@ -1,25 +1,129 @@
-:root { --primary: #1a2a3a; --bg: #f0f2f5; --success: #27ae60; }
-body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); }
+:root {
+  --primary: #1a2a3a;
+  --bg: #f0f2f5;
+  --success: #27ae60;
+}
 
-nav { background: var(--primary); color: white; display: flex; padding: 10px 20px; justify-content: space-between; align-items: center; }
-.menu-tabs { display: flex; list-style: none; gap: 20px; cursor: pointer; margin: 0; }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  background: var(--bg);
+}
 
-.container-principal { display: flex; height: calc(100vh - 60px); width: 100%; }
-.lado-mesas { flex: 2; padding: 20px; overflow-y: auto; border-right: 2px solid #ddd; }
-.lado-cupom { flex: 1; padding: 20px; background: #e0e0e0; display: flex; justify-content: center; }
+/* NAVBAR */
+nav {
+  background: var(--primary);
+  color: white;
+  display: flex;
+  padding: 10px 20px;
+  justify-content: space-between;
+  align-items: center;
+}
 
-.grid-mesas { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; margin-top: 20px; }
-.mesa { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; }
-.mesa.ocupada { border-color: #e74c3c; background: #fff5f5; }
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+}
 
-.ticket { width: 320px; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); height: fit-content; min-height: 700px; font-family: 'Courier New', monospace; }
-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+.menu-tabs {
+  display: flex;
+  list-style: none;
+  gap: 20px;
+  cursor: pointer;
+  margin: 0;
+}
 
-.btn-add { background: var(--success); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-weight: bold; }
-.btn-fechar { background: #27ae60; color: white; border: none; width: 100%; padding: 12px; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px; }
+.menu-tabs li:hover {
+  opacity: 0.8;
+}
 
-#barcode { max-width: 100%; height: auto; }
+/* LAYOUT PRINCIPAL */
+.container-principal {
+  display: flex;
+  height: calc(100vh - 60px);
+  width: 100%;
+}
+
+/* LADO MESAS */
+.lado-mesas {
+  flex: 2;
+  padding: 20px;
+  overflow-y: auto;
+  border-right: 2px solid #ddd;
+}
+
+/* LADO CUPOM */
+.area-comanda {
+  flex: 1;
+  padding: 20px;
+  background: #e0e0e0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* GRID MESAS */
+.grid-mesas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.mesa {
+  background: white;
+  border: 2px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.mesa:hover {
+  transform: scale(1.05);
+}
+
+.mesa.ocupada {
+  border-color: #e74c3c;
+  background: #fff5f5;
+}
+
+/* BOTÕES */
+.btn-add {
+  background: var(--success);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-fechar {
+  background: #27ae60;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+/* CUPOM */
+.ticket {
+  width: 320px;
+  background: white;
+  padding: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  font-family: 'Courier New', monospace;
+  min-height: 700px;
+}
+
+/* CABEÇALHO CUPOM */
 .ticket-header {
   text-align: center;
   border-bottom: 1px dashed #000;
@@ -37,7 +141,87 @@ th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
   font-size: 13px;
 }
 
+/* INFO MESA */
 .ticket-info {
   font-size: 13px;
   margin-bottom: 10px;
+}
+
+/* TABELA ITENS */
+.ticket table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.ticket th {
+  text-align: left;
+  border-bottom: 1px dashed #000;
+  padding: 5px 0;
+}
+
+.ticket td {
+  padding: 4px 0;
+}
+
+/* TOTAIS */
+.total {
+  border-top: 1px dashed #000;
+  margin-top: 10px;
+  padding-top: 10px;
+  font-size: 15px;
+}
+
+.total div {
+  display: flex;
+  justify-content: space-between;
+}
+
+/* RODAPÉ */
+.footer {
+  text-align: center;
+  margin-top: 15px;
+  border-top: 1px dashed #000;
+  padding-top: 10px;
+  font-size: 12px;
+}
+
+/* TABELAS GERAIS */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+  background: white;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+/* IMPRESSÃO */
+@media print {
+  body {
+    background: white;
+  }
+
+  nav, .lado-mesas {
+    display: none;
+  }
+
+  .area-comanda {
+    background: white;
+  }
+
+  .ticket {
+    box-shadow: none;
+  }
 }
