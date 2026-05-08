@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Configurações</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      ⚙️ Configurações
+    </div>
+
+    <div class="usuario">
+      PDV Elite 934
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Configurações do Sistema</h2>
+
+      <br>
+
+      <label>
+
+        Nome do Estabelecimento
+
+      </label>
+
+      <br><br>
+
+      <input
+        type="text"
+        class="campo"
+        value="Boteco 934"
+      >
+
+      <br><br>
+
+      <label>
+
+        Taxa de Serviço (%)
+
+      </label>
+
+      <br><br>
+
+      <input
+        type="number"
+        class="campo"
+        value="10"
+      >
+
+      <br><br>
+
+      <label>
+
+        WhatsApp Cobrança
+
+      </label>
+
+      <br><br>
+
+      <input
+        type="text"
+        class="campo"
+        placeholder="(87) 99999-9999"
+      >
+
+      <br><br>
+
+      <label>
+
+        Impressão Automática
+
+      </label>
+
+      <br><br>
+
+      <select class="campo">
+
+        <option>Ativado</option>
+        <option>Desativado</option>
+
+      </select>
+
+      <br><br>
+
+      <button class="produto">
+
+        💾 Salvar Configurações
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href = "index.html";
+
+    }
+
+  </script>
+
+</body>
+
+</html>
