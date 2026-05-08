@@ -1,48 +1,75 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>PDV Elite 934</title>
 
   <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
 
   <header>
-    <div class="logo">🍺 PDV Elite 934</div>
+
+    <div class="logo">
+      🍺 PDV Elite 934
+    </div>
 
     <div class="usuario">
       Operador: Edmarques | Caixa 01
     </div>
+
   </header>
 
   <nav>
 
-  <button onclick="abrirPagina('pages/produtos.html')">🍺 Produtos</button>
+    <button onclick="abrirPagina('produtos.html')">
+      🍺 Produtos
+    </button>
 
-    <button onclick="abrirPagina('pages/clientes.html')">👥 Clientes</button>
-  
-    <button onclick="abrirPagina('pages/financeiro.html')">💰 Financeiro</button>
-  
-    <button onclick="abrirPagina('pages/mesas.html')">🍽️ Mesas</button>
-  
-    <button onclick="abrirPagina('pages/estoque.html')">📦 Estoque</button>
-  
-    <button onclick="abrirPagina('pages/xml.html')">📄 XML</button>
-  
-    <button onclick="abrirPagina('pages/relatorios.html')">📊 Relatórios</button>
-  
-    <button onclick="abrirPagina('pages/configuracoes.html')">⚙️ Configurações</button>
+    <button onclick="abrirPagina('clientes.html')">
+      👥 Clientes
+    </button>
 
-</nav>
+    <button onclick="abrirPagina('financeiro.html')">
+      💰 Financeiro
+    </button>
+
+    <button onclick="abrirPagina('mesas.html')">
+      🍽️ Mesas
+    </button>
+
+    <button onclick="abrirPagina('estoque.html')">
+      📦 Estoque
+    </button>
+
+    <button onclick="abrirPagina('xml.html')">
+      📄 XML
+    </button>
+
+    <button onclick="abrirPagina('relatorios.html')">
+      📊 Relatórios
+    </button>
+
+    <button onclick="abrirPagina('configuracoes.html')">
+      ⚙️ Configurações
+    </button>
+
+  </nav>
+
   <div class="container">
 
     <div class="produtos">
+
       <h2>Produtos</h2>
 
       <div class="grid-produtos">
+
         <button class="produto">Amstel</button>
         <button class="produto">Heineken</button>
         <button class="produto">Skol</button>
@@ -51,54 +78,87 @@
         <button class="produto">Whisky</button>
         <button class="produto">Porção</button>
         <button class="produto">Espetinho</button>
+
       </div>
+
     </div>
 
     <div class="comanda">
+
       <h2>🍽️ Mesa 01</h2>
 
       <div class="mesa-info">
+
         <strong>Cliente:</strong> João Silva<br>
+
         <strong>Garçom:</strong> Carlos<br>
+
         <strong>Status:</strong> Mesa Aberta
+
       </div>
 
       <table>
+
         <thead>
+
           <tr>
+
             <th>Item</th>
             <th>Qtd</th>
             <th>Total</th>
+
           </tr>
+
         </thead>
 
         <tbody>
+
           <tr>
+
             <td>Heineken</td>
             <td>2</td>
             <td>R$ 24,00</td>
+
           </tr>
 
           <tr>
+
             <td>Espetinho</td>
             <td>3</td>
             <td>R$ 45,00</td>
+
           </tr>
+
         </tbody>
+
       </table>
 
       <div class="total">
+
         Total: R$ 69,00
+
       </div>
 
       <div class="acoes">
-        <button class="abrir">➕ Abrir Mesa</button>
-        <button class="dividir">💳 Dividir Conta</button>
-        <button class="fechar">🔒 Fechar Mesa</button>
+
+        <button class="abrir">
+          ➕ Abrir Mesa
+        </button>
+
+        <button class="dividir">
+          💳 Dividir Conta
+        </button>
+
+        <button class="fechar">
+          🔒 Fechar Mesa
+        </button>
+
       </div>
 
       <div class="status">
+
         ✔ Mesa só poderá ser fechada após pagamento total.
+
       </div>
 
     </div>
