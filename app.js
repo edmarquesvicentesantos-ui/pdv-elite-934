@@ -141,6 +141,6 @@ function atualizarVisualCupom(id, dados) {
     h += `<hr><b>TOTAL: R$ ${dados.total.toFixed(2)}</b><div style="text-align:center;margin-top:10px;"><svg id="barcode"></svg></div>`;
     div.innerHTML = h;
     JsBarcode("#barcode", "MESA-"+id, {width:1.5, height:40});
-};
+}
 
 window.switchTab('mesas');
