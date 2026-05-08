@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Produtos</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🍺 Cadastro de Produtos
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Novo Produto</h2>
+
+      <br>
+
+      <input
+        type="text"
+        placeholder="Nome do Produto"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="text"
+        placeholder="Categoria"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        placeholder="Preço"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        placeholder="Estoque"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button class="produto">
+        💾 Salvar Produto
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href = "index.html";
+
+    }
+
+  </script>
+
+</body>
+
+</html>
