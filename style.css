@@ -1,163 +1,232 @@
 * {
+
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
   font-family: Arial, Helvetica, sans-serif;
+
 }
 
 body {
+
   background: #f1f1f1;
+
 }
 
 header {
+
   background: #1f344a;
   color: white;
+
   padding: 15px 20px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
 .logo {
+
   font-size: 22px;
   font-weight: bold;
+
 }
 
 .usuario {
+
   font-size: 14px;
+
 }
 
 nav {
+
   background: #294763;
+
+  padding: 12px;
+
   display: flex;
   gap: 10px;
-  padding: 12px;
+
   flex-wrap: wrap;
+
 }
 
 nav button {
-  background: #35b55a;
-  border: none;
-  color: white;
-  padding: 12px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.3s;
-}
 
-nav button:hover {
-  background: #2a9448;
+  background: #35b55a;
+
+  border: none;
+
+  color: white;
+
+  padding: 12px 18px;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
 }
 
 .container {
+
   display: flex;
+
   padding: 20px;
+
   gap: 20px;
+
 }
 
 .produtos {
-  flex: 2;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
 
-.produtos h2 {
-  margin-bottom: 20px;
+  flex: 2;
+
+  background: white;
+
+  padding: 20px;
+
+  border-radius: 10px;
+
 }
 
 .grid-produtos {
+
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(150px, 1fr));
+
   gap: 15px;
+
+  margin-top: 20px;
+
 }
 
 .produto {
-  background: #35b55a;
-  color: white;
-  border: none;
-  padding: 25px;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-}
 
-.produto:hover {
-  background: #2c974a;
+  background: #35b55a;
+
+  color: white;
+
+  border: none;
+
+  padding: 25px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
 }
 
 .comanda {
+
   width: 350px;
+
   background: white;
+
   padding: 20px;
+
   border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
 }
 
 .mesa-info {
-  margin-bottom: 15px;
+
+  margin-top: 15px;
+
   background: #f7f7f7;
+
   padding: 10px;
+
   border-radius: 8px;
+
 }
 
 table {
+
   width: 100%;
-  margin-top: 10px;
+
+  margin-top: 15px;
+
   border-collapse: collapse;
+
 }
 
 table th,
 table td {
+
   border: 1px solid #ddd;
+
   padding: 8px;
-  font-size: 14px;
+
 }
 
 .total {
+
   margin-top: 20px;
-  font-size: 18px;
+
+  font-size: 22px;
+
   font-weight: bold;
+
 }
 
 .acoes {
-  margin-top: 20px;
+
   display: flex;
+
   flex-direction: column;
+
   gap: 10px;
+
+  margin-top: 20px;
+
 }
 
 .acoes button {
+
   border: none;
+
   padding: 12px;
+
   border-radius: 8px;
-  cursor: pointer;
+
   color: white;
-  font-size: 14px;
+
+  cursor: pointer;
+
 }
 
 .abrir {
-  background: #2196f3;
-}
 
-.fechar {
-  background: #f44336;
+  background: #2196f3;
+
 }
 
 .dividir {
+
   background: #ff9800;
+
+}
+
+.fechar {
+
+  background: #f44336;
+
 }
 
 .status {
+
   margin-top: 15px;
-  padding: 10px;
-  border-radius: 8px;
+
   background: #e8f5e9;
+
+  padding: 10px;
+
+  border-radius: 8px;
+
   color: #2e7d32;
-  font-size: 14px;
+
 }
