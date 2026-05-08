@@ -12,27 +12,13 @@
         <ul class="menu-tabs">
             <li onclick="window.switchTab('mesas')">Mesas</li>
             <li onclick="window.switchTab('clientes')">Clientes</li>
+            <li onclick="window.switchTab('produtos')">Produtos</li>
             <li onclick="window.switchTab('dre')">Financeiro</li>
         </ul>
     </nav>
 
-    <div id="main-content" class="container-principal no-print">
-        <div class="lado-mesas">
-            <h2>Painel de Mesas</h2>
-            <div class="grid-mesas" id="mesaGrid"></div>
+    <div id="main-content" class="container-principal">
         </div>
-
-        <div class="lado-cupom">
-            <div class="ticket">
-                <div id="conteudo-cupom">
-                    <div style="text-align:center; color:#999; margin-top:50px;">
-                        <p><strong>BOTECO 934</strong></p>
-                        <p>Selecione uma mesa para ver o consumo</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script type="module" src="app.js"></script>
 </body>
