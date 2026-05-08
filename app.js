@@ -109,13 +109,33 @@ window.gerenciarMesa = async (id) => {
             if(prods[esc]) {
                 const item = prods[esc];
               const qtd = parseInt(prompt("Quantidade:", 1)) || 1
-const totalItem = item.preco * qtd
 
-const novos = [...d.itens, {
-    nome: item.nome,
-    qtd: qtd,
-    total: totalItem
-}]
+let itensMesa = d.itens || []
+
+// procura se o item já existe
+const index = itensMesa.findIndex(i => i.nome === item.nome)
+
+if(index >= 0){
+    // já existe → soma quantidade
+    itensMesa[index].qtd += qtd
+    itensMesa[index].total += item.preco * qtd
+}else{
+    // novo item
+    itensMesa.push({
+        nome: item.nome,
+        qtd: qtd,
+        total: item.preco * qtd
+    })
+}
+
+// recalcula total geral
+let novoTotal = 0
+itensMesa.forEach(i => novoTotal += i.total)
+
+await updateDoc(mRef, {
+    itens: itensMesa,
+    total: novoTotal
+})
 
 await updateDoc(mRef, {
     itens: novos,
