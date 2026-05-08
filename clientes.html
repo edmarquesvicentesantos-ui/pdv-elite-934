@@ -5,6 +5,9 @@
 
   <meta charset="UTF-8">
 
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Clientes</title>
 
   <link rel="stylesheet" href="style.css">
@@ -17,6 +20,10 @@
 
     <div class="logo">
       👥 Cadastro de Clientes
+    </div>
+
+    <div class="usuario">
+      PDV Elite 934
     </div>
 
   </header>
@@ -39,6 +46,7 @@
 
       <input
         type="text"
+        id="nome"
         placeholder="Nome do Cliente"
         class="campo"
       >
@@ -47,6 +55,7 @@
 
       <input
         type="text"
+        id="telefone"
         placeholder="Telefone"
         class="campo"
       >
@@ -55,27 +64,110 @@
 
       <input
         type="text"
+        id="whatsapp"
         placeholder="WhatsApp"
         class="campo"
       >
 
       <br><br>
 
-      <button class="produto">
+      <button
+        class="produto"
+        onclick="salvarCliente()"
+      >
+
         💾 Salvar Cliente
+
       </button>
+
+      <br><br>
+
+      <div id="mensagem"></div>
 
     </div>
 
   </div>
 
-  <script>
+  <script type="module">
+
+    import { db } from "./firebase.js";
+
+    import {
+
+      collection,
+      addDoc
+
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     function voltar(){
 
       window.location.href = "index.html";
 
     }
+
+    window.voltar = voltar;
+
+    async function salvarCliente(){
+
+      let nome =
+        document.getElementById("nome").value;
+
+      let telefone =
+        document.getElementById("telefone").value;
+
+      let whatsapp =
+        document.getElementById("whatsapp").value;
+
+      if(nome === ""){
+
+        alert("Informe o nome do cliente");
+
+        return;
+
+      }
+
+      try{
+
+        await addDoc(collection(db, "clientes"), {
+
+          nome: nome,
+          telefone: telefone,
+          whatsapp: whatsapp,
+          criadoEm: new Date()
+
+        });
+
+        document
+          .getElementById("mensagem")
+          .innerHTML = `
+
+            <div class="status">
+
+              ✔ Cliente salvo no Firebase!
+
+            </div>
+
+          `;
+
+        // limpa campos
+        document.getElementById("nome").value = "";
+
+        document.getElementById("telefone").value = "";
+
+        document.getElementById("whatsapp").value = "";
+
+      } catch(erro){
+
+        console.log(erro);
+
+        alert("Erro ao salvar cliente");
+
+      }
+
+    }
+
+    window.salvarCliente = salvarCliente;
 
   </script>
 
