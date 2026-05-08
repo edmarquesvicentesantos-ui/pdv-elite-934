@@ -12,7 +12,7 @@ nav { background: var(--primary); color: white; display: flex; padding: 10px 20p
 .mesa { background: white; border: 2px solid #ccc; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; }
 .mesa.ocupada { border-color: #e74c3c; background: #fff5f5; }
 
-.ticket { width: 320px; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); height: fit-content; min-height: 500px; font-family: 'Courier New', monospace; }
+.ticket { width: 320px; background: white; padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); height: fit-content; min-height: 700px; font-family: 'Courier New', monospace; }
 table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
 th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
 
