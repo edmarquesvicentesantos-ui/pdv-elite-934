@@ -2,68 +2,113 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>PDV Boteco 934</title>
-<link rel="stylesheet" href="style.css">
+<title>PDV Boteco</title>
+
+<style>
+body{
+  font-family: monospace;
+  background:#f4f4f4;
+  text-align:center;
+}
+#cupom{
+  width:300px;
+  background:#fff;
+  margin:20px auto;
+  padding:10px;
+  border:2px dashed #000;
+  text-align:left;
+}
+button{
+  padding:10px;
+  margin:5px;
+  font-size:16px;
+}
+</style>
 </head>
+
 <body>
 
-<nav>
-  🍺 PDV Boteco 934
-</nav>
+<h2>🍺 PDV BOTeco</h2>
 
-<div class="container-principal">
+<button onclick="addProduto()">Lançar Produto</button>
+<button onclick="dividirConta()">Dividir Conta</button>
+<button onclick="imprimir()">🖨 Imprimir</button>
+<button onclick="whatsapp()">📲 WhatsApp</button>
+<button onclick="pagamento()">💰 Finalizar</button>
 
-  <!-- PRODUTOS -->
-  <div class="lado-mesas">
-    <h2>Produtos</h2>
-
-    <button class="btn-add" onclick="adicionarProduto('Amstel',5)">Amstel</button>
-    <button class="btn-add" onclick="adicionarProduto('Heineken',7)">Heineken</button>
-    <button class="btn-add" onclick="adicionarProduto('Skol',4)">Skol</button>
-    <button class="btn-add" onclick="adicionarProduto('Refri',6)">Refri</button>
-    <button class="btn-add" onclick="adicionarProduto('Água',3)">Água</button>
-
-  </div>
-
-  <!-- CUPOM -->
-  <div class="lado-cupom">
-    <div class="ticket">
-
-      <div class="ticket-header">
-        <h2>BOTECO 934</h2>
-        Distribuidora & Restaurante<br>
-        Petrolina - PE
-      </div>
-
-      <h3>Clientes da mesa</h3>
-      <select id="lista-clientes"></select>
-      <button onclick="adicionarClienteMesa()">+ Cliente</button>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Qtd</th>
-            <th>Total</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="itens-cupom"></tbody>
-      </table>
-
-      <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
-      <p>Taxa 10%: R$ <span id="taxa">0.00</span></p>
-
-      <h3>Total: R$ <span id="total-geral">0.00</span></h3>
-
-      <button class="btn-add" onclick="dividirConta()">👥 Dividir Conta</button>
-      <button class="btn-fechar" onclick="fecharMesa()">💰 Fechar Mesa</button>
-
-    </div>
-  </div>
-
+<div id="cupom">
+<b>BOTECO 934</b><br>
+<hr>
+<div id="itens"></div>
+<hr>
+<b id="total">TOTAL: R$ 0.00</b>
+<div id="pagamentoInfo"></div>
 </div>
 
-<script src="app.js"></script>
+<script>
+let pedidos = [];
+let total = 0;
+
+function atualizarCupom(){
+  let html="";
+  pedidos.forEach(p=>{
+    html += `${p.nome} - R$ ${p.valor.toFixed(2)}<br>`;
+  });
+  document.getElementById("itens").innerHTML = html;
+  document.getElementById("total").innerHTML="TOTAL: R$ "+total.toFixed(2);
+}
+
+function addProduto(){
+  let nome = prompt("Nome do produto:");
+  if(!nome) return;
+
+  let valor = parseFloat(prompt("Valor do produto:"));
+  if(isNaN(valor)) return;
+
+  pedidos.push({nome, valor});
+  total += valor;
+  atualizarCupom();
+}
+
+function dividirConta(){
+  if(total==0){ alert("Sem pedidos"); return; }
+
+  let pessoas = parseInt(prompt("Dividir para quantas pessoas?"));
+  if(isNaN(pessoas) || pessoas<=1) return;
+
+  let valorPessoa = total / pessoas;
+  alert("Cada pessoa paga R$ "+valorPessoa.toFixed(2));
+}
+
+function pagamento(){
+  if(total==0){ alert("Sem pedidos"); return; }
+
+  let forma = prompt("Forma: dinheiro / debito / credito / pix / pendura");
+
+  if(forma=="pendura"){
+    let nome = prompt("Nome do cliente do pendura:");
+    document.getElementById("pagamentoInfo").innerHTML =
+      "<br>🧾 PENDURA: "+nome;
+    return;
+  }
+
+  document.getElementById("pagamentoInfo").innerHTML =
+      "<br>Pagamento: "+forma;
+}
+
+function imprimir(){
+  window.print();
+}
+
+function whatsapp(){
+  let texto="🍺 *BOTECO 934*%0A%0A";
+  pedidos.forEach(p=>{
+    texto += `${p.nome} - R$ ${p.valor.toFixed(2)}%0A`;
+  });
+  texto += "%0ATotal: R$ "+total.toFixed(2);
+  window.open("https://wa.me/?text="+texto);
+}
+</script>
+
 </body>
 </html>
