@@ -79,6 +79,11 @@ function atualizarCupom(){
 
 window.dividirConta = function(){
 
+ if(pedidoAtual.length==0){
+   alert("Sem itens!");
+   return;
+ }
+
  let resumo={};
 
  pedidoAtual.forEach(p=>{
@@ -86,14 +91,15 @@ window.dividirConta = function(){
    resumo[p.cliente]+=p.total;
  });
 
- let msg="DIVISÃO DA CONTA\n\n";
+ let html="<hr><b>DIVISÃO DA CONTA</b><br>";
+
  for(let c in resumo){
    let taxa=resumo[c]*0.10;
    let total=resumo[c]+taxa;
-   msg += `${c}: R$ ${total.toFixed(2)}\n`;
+   html += `${c}: <b>R$ ${total.toFixed(2)}</b><br>`;
  }
 
- alert(msg);
+ document.querySelector(".ticket").innerHTML += html;
 }
 
 window.fecharMesa = function(){
@@ -117,10 +123,24 @@ window.fecharMesa = function(){
  if(forma==4) caixaHoje.credito+=total;
  if(forma==5) caixaHoje.pendura+=total;
 
+ mostrarResumoCaixa();
+
  alert("Mesa fechada!");
 
  pedidoAtual=[];
  clientesMesa=[];
  atualizarCupom();
  atualizarListaClientes();
+}
+
+function mostrarResumoCaixa(){
+ alert(
+`CAIXA DO DIA 💰
+
+Dinheiro: R$ ${caixaHoje.dinheiro.toFixed(2)}
+Pix: R$ ${caixaHoje.pix.toFixed(2)}
+Débito: R$ ${caixaHoje.debito.toFixed(2)}
+Crédito: R$ ${caixaHoje.credito.toFixed(2)}
+Pendura: R$ ${caixaHoje.pendura.toFixed(2)}
+`);
 }
