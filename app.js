@@ -135,12 +135,43 @@ onSnapshot(collection(db, "mesas"), (snap) => {
 });
 
 function atualizarVisualCupom(id, dados) {
-    const div = document.getElementById('conteudo-cupom');
-    let h = `<div style="text-align:center"><strong>BOTECO 934</strong><br>MESA ${id}</div><hr>`;
-    dados.itens.forEach(i => h += `<div style="display:flex; justify-content:space-between"><span>${i.nome}</span><span>R$ ${i.total.toFixed(2)}</span></div>`);
-    h += `<hr><b>TOTAL: R$ ${dados.total.toFixed(2)}</b><div style="text-align:center;margin-top:10px;"><svg id="barcode"></svg></div>`;
-    div.innerHTML = h;
-    JsBarcode("#barcode", "MESA-"+id, {width:1.5, height:40});
+
+    // cabeçalho
+    document.getElementById("cupom-mesa").innerText = id
+    document.getElementById("cupom-cliente").innerText = dados.cliente || "Balcão"
+    document.getElementById("cupom-data").innerText = new Date().toLocaleString()
+    document.getElementById("cupom-user").innerText = "Operador"
+
+    // itens
+    const tbody = document.getElementById("cupom-itens")
+    tbody.innerHTML = ""
+
+    let subtotal = 0
+
+    dados.itens.forEach(item => {
+        const totalItem = item.total || item.preco || 0
+        subtotal += totalItem
+
+        const tr = document.createElement("tr")
+        tr.innerHTML = `
+            <td>${item.nome}</td>
+            <td>${item.qtd || 1}</td>
+            <td>R$ ${totalItem.toFixed(2)}</td>
+        `
+        tbody.appendChild(tr)
+    })
+
+    const taxa = subtotal * 0.1
+    const total = subtotal + taxa
+
+    document.getElementById("subtotal").innerText = "R$ " + subtotal.toFixed(2)
+    document.getElementById("taxa").innerText = "R$ " + taxa.toFixed(2)
+    document.getElementById("total").innerText = "R$ " + total.toFixed(2)
+
+    // código de barras
+    setTimeout(() => {
+        JsBarcode("#barcode", "MESA-" + id, { width:1.5, height:40 })
+    }, 200)
 }
 
 window.switchTab('mesas');
