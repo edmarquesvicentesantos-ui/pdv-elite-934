@@ -2,49 +2,102 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>PDV Boteco</title>
+<title>PDV Boteco 934</title>
 
 <style>
 body{
-  font-family: monospace;
-  background:#f4f4f4;
-  text-align:center;
+  font-family: Arial;
+  background:#f4f6f9;
+  margin:0;
 }
-#cupom{
-  width:300px;
+.topo{
+  background:#1f2d3d;
+  color:#fff;
+  padding:15px;
+  font-size:22px;
+}
+.container{
+  display:flex;
+  padding:20px;
+}
+.produtos{
+  width:65%;
+}
+.comanda{
+  width:35%;
   background:#fff;
-  margin:20px auto;
-  padding:10px;
-  border:2px dashed #000;
-  text-align:left;
+  padding:15px;
+  border-radius:8px;
+  box-shadow:0 0 10px #ccc;
 }
-button{
-  padding:10px;
-  margin:5px;
-  font-size:16px;
+.btn{
+  background:#27ae60;
+  border:none;
+  padding:15px;
+  color:#fff;
+  margin:8px;
+  border-radius:8px;
+  font-size:18px;
+  cursor:pointer;
 }
-</style>
-</head>
+.btn:hover{ background:#219150; }
 
+.tabela{
+  width:100%;
+  margin-top:10px;
+}
+.tabela td{ padding:5px; }
+
+.finalizar{
+  width:100%;
+  padding:15px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+}
+.fechar{ background:#e74c3c; }
+.dividir{ background:#3498db; }
+</style>
+
+</head>
 <body>
 
-<h2>🍺 PDV BOTeco</h2>
+<div class="topo">🍺 PDV Boteco 934</div>
 
-<button onclick="addProduto()">Lançar Produto</button>
-<button onclick="dividirConta()">Dividir Conta</button>
-<button onclick="imprimir()">🖨 Imprimir</button>
-<button onclick="whatsapp()">📲 WhatsApp</button>
-<button onclick="pagamento()">💰 Finalizar</button>
+<div class="container">
 
-<div id="cupom">
-<b>BOTECO 934</b><br>
-<hr>
-<div id="itens"></div>
-<hr>
-<b id="total">TOTAL: R$ 0.00</b>
-<div id="pagamentoInfo"></div>
+<div class="produtos">
+<h2>Produtos</h2>
+
+<button class="btn" onclick="addItem('Amstel',6)">Amstel</button>
+<button class="btn" onclick="addItem('Heineken',8)">Heineken</button>
+<button class="btn" onclick="addItem('Skol',5)">Skol</button>
+<button class="btn" onclick="addItem('Refri',4)">Refri</button>
+<button class="btn" onclick="addItem('Água',3)">Água</button>
+
 </div>
 
-  <script src="script.js"></script>
+<div class="comanda">
+
+<h3>Clientes da mesa</h3>
+<input id="clienteNome" placeholder="Nome do cliente">
+<button onclick="addCliente()">+ Cliente</button>
+
+<select id="clientes"></select>
+
+<table class="tabela" id="lista"></table>
+
+<h3 id="total">Total: R$ 0</h3>
+
+<button class="finalizar dividir" onclick="dividir()">Dividir Conta</button>
+<button class="finalizar fechar" onclick="fechar()">Fechar Mesa</button>
+
+</div>
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
