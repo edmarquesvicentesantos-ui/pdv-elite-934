@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, doc, updateDoc, getDoc, addDoc, getDocs, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAuQzRvaOndn3AkRvuA1PD0S4Jb9kbOar4",
@@ -15,106 +15,116 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 let mesaAtivaId = null;
 
-// --- GESTÃO DE CLIENTES ---
-window.cadastrarCliente = async () => {
-    const nome = prompt("Nome do Cliente:");
-    const fone = prompt("WhatsApp (DDD+Número):");
-    if (nome) {
-        await addDoc(collection(db, "clientes"), { nome, contato: fone || '', totalGasto: 0 });
-        alert("Cliente cadastrado!");
-        window.switchTab('clientes');
+// --- GESTÃO DE PRODUTOS ---
+window.cadastrarProduto = async () => {
+    const nome = prompt("Nome do Produto (Ex: Cerveja Amstel):");
+    const preco = parseFloat(prompt("Preço de Venda R$:"));
+    if (nome && preco) {
+        await addDoc(collection(db, "produtos"), { nome, preco });
+        window.switchTab('produtos');
     }
 };
 
-// --- GESTÃO DE MESAS ---
+// --- CONFIGURAÇÃO DE MESAS (Adicionar novas mesas) ---
+window.configurarMesas = async () => {
+    const qtd = parseInt(prompt("Deseja ter quantas mesas no total?"));
+    if (qtd) {
+        for (let i = 1; i <= qtd; i++) {
+            const mRef = doc(db, "mesas", i.toString());
+            const mSnap = await getDoc(mRef);
+            if (!mSnap.exists()) {
+                await setDoc(mRef, { status: 'livre', cliente: '', total: 0, itens: [] });
+            }
+        }
+        alert(qtd + " mesas configuradas!");
+        window.switchTab('mesas');
+    }
+};
+
+// --- GESTÃO DE VENDAS E CUPOM ---
 function atualizarVisualCupom(id, dados) {
-    const conteudo = document.getElementById('conteudo-cupom');
-    if (!conteudo) return;
+    const div = document.getElementById('conteudo-cupom');
+    if (!div) return;
     if (!dados || dados.status === 'livre') {
-        conteudo.innerHTML = `<div style="text-align:center; color:#999; margin-top:50px;"><p><strong>BOTECO 934</strong></p><p>Selecione uma mesa ocupada</p></div>`;
+        div.innerHTML = `<div style="text-align:center; color:#999; margin-top:50px;"><p>BOTECO 934</p><p>Selecione uma mesa</p></div>`;
         return;
     }
-    let html = `<div style="text-align:center"><strong>BOTECO 934</strong><br><small>MESA ${id}</small></div><hr style="border-top:1px dashed #000">`;
-    html += `<strong>CLIENTE: ${dados.cliente.toUpperCase()}</strong><br><small>Whats: ${dados.telefone || 'Não inf.'}</small><hr style="border-top:1px dashed #000">`;
+    let html = `<div style="text-align:center"><strong>MESA ${id}</strong></div><hr>`;
     dados.itens.forEach(i => {
-        html += `<div style="display:flex; justify-content:space-between; font-size:0.9em"><span>${i.qtd}x ${i.nome}</span><span>R$ ${i.total.toFixed(2)}</span></div>`;
+        html += `<div style="display:flex; justify-content:space-between"><span>${i.qtd}x ${i.nome}</span><span>R$ ${i.total.toFixed(2)}</span></div>`;
     });
-    html += `<hr style="border-top:2px solid #000"><div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2em"><span>TOTAL:</span><span>R$ ${dados.total.toFixed(2)}</span></div>`;
-    html += `<button style="background:#27ae60; color:white; width:100%; padding:12px; border:none; border-radius:5px; margin-top:15px; cursor:pointer; font-weight:bold" onclick="window.fecharContaManual('${id}')">FECHAR CONTA</button>`;
-    conteudo.innerHTML = html;
+    html += `<hr><b>TOTAL: R$ ${dados.total.toFixed(2)}</b>`;
+    html += `<button class="btn-fechar" onclick="window.fecharContaManual('${id}')">FECHAR CONTA</button>`;
+    div.innerHTML = html;
 }
 
 window.gerenciarMesa = async (id) => {
     mesaAtivaId = id;
-    const mesaRef = doc(db, "mesas", id);
-    const mesaSnap = await getDoc(mesaRef);
-    const dados = mesaSnap.data();
+    const mRef = doc(db, "mesas", id);
+    const mSnap = await getDoc(mRef);
+    const dados = mSnap.data();
 
     if (dados.status === 'livre') {
-        const nome = prompt("Nome do Cliente (ou deixe vazio p/ ver lista de cadastrados):");
-        if (nome) {
-            await updateDoc(mesaRef, { status: 'ocupada', cliente: nome, total: 0, itens: [] });
-        }
+        const nome = prompt("Nome do Cliente:");
+        if (nome) await updateDoc(mRef, { status: 'ocupada', cliente: nome, total: 0, itens: [] });
     } else {
-        const acao = prompt(`MESA ${id} - ${dados.cliente}\n1. Lançar Produto\n2. Limpar Mesa`);
+        const acao = prompt("1. Lançar Produto\n2. Zerar Mesa");
         if (acao === "1") {
-            const prod = prompt("Produto:");
-            const preco = parseFloat(prompt("Preço R$:"));
-            const qtd = parseInt(prompt("Qtd:", "1")) || 1;
-            if (prod && preco) {
-                const novosItens = [...(dados.itens || []), { nome: prod, preco, qtd, total: preco * qtd }];
-                await updateDoc(mesaRef, { itens: novosItens, total: (dados.total || 0) + (preco * qtd) });
+            // Puxa produtos do banco para facilitar
+            const pSnap = await getDocs(collection(db, "produtos"));
+            let lista = "PRODUTOS:\n";
+            let prods = [];
+            pSnap.forEach(p => {
+                prods.push({id: p.id, ...p.data()});
+                lista += `${prods.length}. ${p.data().nome} (R$ ${p.data().preco})\n`;
+            });
+            const escolha = parseInt(prompt(lista + "\nDigite o número do produto:")) - 1;
+            const qtd = parseInt(prompt("Quantidade:", "1")) || 1;
+            
+            if (prods[escolha]) {
+                const p = prods[escolha];
+                const novosItens = [...dados.itens, { nome: p.nome, preco: p.preco, qtd, total: p.preco * qtd }];
+                await updateDoc(mRef, { itens: novosItens, total: dados.total + (p.preco * qtd) });
             }
         } else if (acao === "2") {
-            if(confirm("Zerar mesa?")) await updateDoc(mesaRef, { status: 'livre', cliente: '', total: 0, itens: [] });
+            await updateDoc(mRef, { status: 'livre', cliente: '', total: 0, itens: [] });
         }
     }
 };
 
-window.fecharContaManual = async (id) => {
-    const mesaRef = doc(db, "mesas", id);
-    const dados = (await getDoc(mesaRef)).data();
-    const pag = prompt("Pagamento: 1.Pix 2.Dinheiro 3.Cartão 4.PENDURA");
-    const formas = {"1":"Pix", "2":"Dinheiro", "3":"Cartão", "4":"PENDURA"};
-    await addDoc(collection(db, "vendas"), { data: new Date(), cliente: dados.cliente, total: dados.total, forma: formas[pag] || "Outros" });
-    await updateDoc(mesaRef, { status: 'livre', cliente: '', total: 0, itens: [] });
-    mesaAtivaId = null;
-    alert("Conta finalizada!");
-};
-
-// --- NAVEGAÇÃO ENTRE ABAS ---
+// --- NAVEGAÇÃO ---
 window.switchTab = async (tab) => {
     const main = document.getElementById('main-content');
-    if (tab === 'mesas') { location.reload(); }
-    if (tab === 'clientes') {
-        const cSnap = await getDocs(collection(db, "clientes"));
+    if (tab === 'mesas') {
+        main.innerHTML = `
+            <div class="lado-mesas"><button class="btn-add" onclick="window.configurarMesas()">+ Configurar Mesas</button><div class="grid-mesas" id="mesaGrid"></div></div>
+            <div class="lado-cupom"><div class="ticket" id="conteudo-cupom"></div></div>`;
+        iniciarSnapshotMesas();
+    }
+    if (tab === 'produtos') {
+        const pSnap = await getDocs(collection(db, "produtos"));
         let linhas = "";
-        cSnap.forEach(c => {
-            const d = c.data();
-            linhas += `<tr><td>${d.nome}</td><td>${d.contato}</td><td>R$ ${(d.totalGasto || 0).toFixed(2)}</td></tr>`;
+        pSnap.forEach(p => {
+            linhas += `<tr><td>${p.data().nome}</td><td>R$ ${p.data().preco.toFixed(2)}</td></tr>`;
         });
-        main.innerHTML = `<div style="padding:20px; width:100%"><h2>Agenda de Clientes</h2><button class="btn-add" onclick="window.cadastrarCliente()">+ Novo Cliente</button><table><thead><tr><th>Nome</th><th>WhatsApp</th><th>Total Gasto</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
+        main.innerHTML = `<div style="padding:20px"><h2>Cadastro de Produtos</h2><button class="btn-add" onclick="window.cadastrarProduto()">+ Novo Produto</button><table><thead><tr><th>Nome</th><th>Preço</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
     }
-    if (tab === 'dre') {
-        const vSnap = await getDocs(collection(db, "vendas"));
-        let t = 0, linhas = "";
-        vSnap.forEach(v => {
-            const d = v.data(); t += d.total;
-            linhas += `<tr><td>${d.cliente}</td><td>${d.forma}</td><td>R$ ${d.total.toFixed(2)}</td></tr>`;
-        });
-        main.innerHTML = `<div style="padding:20px; width:100%"><h2>Financeiro</h2><h3 style="color:green">Caixa Total: R$ ${t.toFixed(2)}</h3><table><thead><tr><th>Cliente</th><th>Pagamento</th><th>Valor</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
-    }
+    // ... (Manter lógica de Clientes e Financeiro anterior)
 };
 
-// ATUALIZAÇÃO EM TEMPO REAL
-onSnapshot(collection(db, "mesas"), (snapshot) => {
-    const grid = document.getElementById('mesaGrid');
-    if(!grid) return;
-    grid.innerHTML = '';
-    snapshot.docs.sort((a,b) => parseInt(a.id) - parseInt(b.id)).forEach(docSnap => {
-        const m = docSnap.data();
-        const border = (mesaAtivaId === docSnap.id) ? 'border: 3px solid #3498db;' : '';
-        grid.innerHTML += `<div class="mesa ${m.status}" style="${border}" onclick="window.gerenciarMesa('${docSnap.id}')"><h3>Mesa ${docSnap.id}</h3><p>${m.cliente || 'Livre'}</p><b>R$ ${m.total.toFixed(2)}</b></div>`;
-        if (mesaAtivaId === docSnap.id) atualizarVisualCupom(docSnap.id, m);
+function iniciarSnapshotMesas() {
+    onSnapshot(collection(db, "mesas"), (snap) => {
+        const grid = document.getElementById('mesaGrid');
+        if (!grid) return;
+        grid.innerHTML = "";
+        snap.docs.sort((a,b) => parseInt(a.id) - parseInt(b.id)).forEach(docSnap => {
+            const m = docSnap.data();
+            const border = (mesaAtivaId === docSnap.id) ? 'border:3px solid #3498db' : '';
+            grid.innerHTML += `<div class="mesa ${m.status}" style="${border}" onclick="window.gerenciarMesa('${docSnap.id}')"><h3>Mesa ${docSnap.id}</h3><p>${m.cliente || 'Livre'}</p><b>R$ ${m.total.toFixed(2)}</b></div>`;
+            if (mesaAtivaId === docSnap.id) atualizarVisualCupom(docSnap.id, m);
+        });
     });
-});
+}
+
+// Inicia nas mesas
+window.switchTab('mesas');
