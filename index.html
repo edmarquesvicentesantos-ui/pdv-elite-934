@@ -7,68 +7,112 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">Elite 934</div>
-        <ul class="menu-tabs">
-            <li onclick="window.switchTab('mesas')">Mesas</li>
-            <li onclick="window.switchTab('clientes')">Clientes</li>
-            <li onclick="window.switchTab('produtos')">Produtos</li>
-            <li onclick="window.switchTab('dre')">Financeiro</li>
-        </ul>
-    </nav>
 
-    <div id="tab-mesas" class="tab-content container-principal">
-        <div class="lado-mesas">
-            <button class="btn-add" onclick="window.configurarMesas()">+ Configurar Salão</button>
-            <div class="grid-mesas" id="mesaGrid"></div>
-        </div>
+<!-- MENU SUPERIOR -->
+<nav>
+    <div class="logo">Elite 934</div>
+    <ul class="menu-tabs">
+        <li onclick="window.switchTab('mesas')">Mesas</li>
+        <li onclick="window.switchTab('clientes')">Clientes</li>
+        <li onclick="window.switchTab('produtos')">Produtos</li>
+        <li onclick="window.switchTab('dre')">Financeiro</li>
+    </ul>
+</nav>
+
+<!-- =================== ABA MESAS =================== -->
+<div id="tab-mesas" class="tab-content container-principal">
+
+    <!-- LADO ESQUERDO - MESAS -->
+    <div class="lado-mesas">
+        <button class="btn-add" onclick="window.configurarMesas()">+ Configurar Salão</button>
+        <div class="grid-mesas" id="mesaGrid"></div>
+    </div>
+
+    <!-- LADO DIREITO - CUPOM -->
+    <div class="area-comanda">
+
+        <div class="ticket">
+
+            <!-- CABEÇALHO -->
             <div class="ticket-header">
-    <h2>BOTECO 934</h2>
-    <div>Distribuidora & Restaurante</div>
-    <div>CNPJ: 00.000.000/0001-00</div>
-    <div>Rua Exemplo, 123 - Centro</div>
-    <div>Petrolina - PE</div>
-    <div>Tel: (87) 99999-9999</div>
-</div>
-
-<div class="ticket-info">
-    <div>Mesa: 05</div>
-    <div>Cliente: João Silva</div>
-    <div>Data: 08/05/2026 21:35</div>
-    <div>Atendente: Maria</div>
-</div>
+                <h2>BOTECO 934</h2>
+                <div>Distribuidora & Restaurante</div>
+                <div>CNPJ: 00.000.000/0001-00</div>
+                <div>Rua Exemplo, 123 - Centro</div>
+                <div>Petrolina - PE</div>
+                <div>Tel: (87) 99999-9999</div>
             </div>
+
+            <!-- INFO MESA -->
+            <div class="ticket-info">
+                <div>Mesa: <span id="cupom-mesa">--</span></div>
+                <div>Cliente: <span id="cupom-cliente">--</span></div>
+                <div>Data: <span id="cupom-data">--</span></div>
+                <div>Atendente: <span id="cupom-user">--</span></div>
+            </div>
+
+            <!-- ITENS -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Qtd</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="cupom-itens"></tbody>
+            </table>
+
+            <!-- TOTAIS -->
+            <div class="total">
+                <div><span>Subtotal</span> <span id="subtotal">R$ 0,00</span></div>
+                <div><span>Taxa</span> <span id="taxa">R$ 0,00</span></div>
+                <div><strong>Total</strong> <strong id="total">R$ 0,00</strong></div>
+            </div>
+
+            <!-- RODAPÉ -->
+            <div class="footer">
+                Obrigado pela preferência ❤️ <br>
+                Volte sempre!
+            </div>
+
         </div>
     </div>
+</div>
 
-    <div id="tab-clientes" class="tab-content" style="display:none; padding:20px;">
-        <h2>Agenda de Clientes</h2>
-        <button class="btn-add" onclick="window.cadastrarCliente()">+ Novo Cliente</button>
-        <table id="tabela-clientes">
-            <thead><tr><th>Nome</th><th>WhatsApp</th></tr></thead>
-            <tbody id="corpo-clientes"></tbody>
-        </table>
-    </div>
+<!-- =================== ABA CLIENTES =================== -->
+<div id="tab-clientes" class="tab-content" style="display:none; padding:20px;">
+    <h2>Agenda de Clientes</h2>
+    <button class="btn-add" onclick="window.cadastrarCliente()">+ Novo Cliente</button>
+    <table>
+        <thead><tr><th>Nome</th><th>WhatsApp</th></tr></thead>
+        <tbody id="corpo-clientes"></tbody>
+    </table>
+</div>
 
-    <div id="tab-produtos" class="tab-content" style="display:none; padding:20px;">
-        <h2>Produtos Cadastrados</h2>
-        <button class="btn-add" onclick="window.cadastrarProduto()">+ Novo Produto</button>
-        <table id="tabela-produtos">
-            <thead><tr><th>Nome</th><th>Preço</th><th>Código</th></tr></thead>
-            <tbody id="corpo-produtos"></tbody>
-        </table>
-    </div>
+<!-- =================== ABA PRODUTOS =================== -->
+<div id="tab-produtos" class="tab-content" style="display:none; padding:20px;">
+    <h2>Produtos Cadastrados</h2>
+    <button class="btn-add" onclick="window.cadastrarProduto()">+ Novo Produto</button>
+    <table>
+        <thead><tr><th>Nome</th><th>Preço</th><th>Código</th></tr></thead>
+        <tbody id="corpo-produtos"></tbody>
+    </table>
+</div>
 
-    <div id="tab-dre" class="tab-content" style="display:none; padding:20px;">
-        <h2>Financeiro / Vendas</h2>
-        <div id="resumo-caixa" style="background:white; padding:15px; margin-bottom:10px; border-radius:5px;"></div>
-        <table id="tabela-vendas">
-            <thead><tr><th>Data</th><th>Cliente</th><th>Total</th><th>Pagamento</th></tr></thead>
-            <tbody id="corpo-vendas"></tbody>
-        </table>
-    </div>
+<!-- =================== ABA FINANCEIRO =================== -->
+<div id="tab-dre" class="tab-content" style="display:none; padding:20px;">
+    <h2>Financeiro / Vendas</h2>
+    <div id="resumo-caixa" class="card"></div>
+    <table>
+        <thead><tr><th>Data</th><th>Cliente</th><th>Total</th><th>Pagamento</th></tr></thead>
+        <tbody id="corpo-vendas"></tbody>
+    </table>
+</div>
 
-    <script type="module" src="app.js"></script>
+<script type="module" src="app.js"></script>
+
 </body>
 </html>
