@@ -1,47 +1,74 @@
 body{
     font-family: Arial;
     background:#f4f4f4;
+    margin:0;
 }
 
+/* MENU SUPERIOR */
 .topo{
     background:#111;
     padding:10px;
+    display:flex;
+    gap:10px;
 }
 .topo button{
-    margin:5px;
-    padding:10px;
+    padding:10px 15px;
     background:#ff9800;
     border:none;
     color:white;
     font-weight:bold;
+    border-radius:6px;
+    cursor:pointer;
 }
 
+/* AREA PRINCIPAL LADO A LADO */
 .container{
     display:flex;
-    gap:20px;
+    justify-content:center;
+    align-items:flex-start;
+    gap:40px;
+    padding:30px;
+}
+
+/* PRODUTOS ESQUERDA */
+.produtos{
+    background:white;
     padding:20px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
 .produtos button{
     display:block;
     margin:10px 0;
     padding:15px;
-    width:200px;
+    width:220px;
     font-size:18px;
+    border:none;
+    border-radius:8px;
+    background:#27ae60;
+    color:white;
+    cursor:pointer;
 }
 
+/* CUPOM DIREITA */
 .ticket{
     width:320px;
     background:white;
     padding:20px;
     box-shadow:0 10px 20px rgba(0,0,0,0.2);
+    border-radius:10px;
     min-height:500px;
 }
 
+/* LINHAS DO CUPOM */
 .linhaCupom{
     display:flex;
     justify-content:space-between;
-    margin:5px 0;
+    align-items:center;
+    margin:6px 0;
+    border-bottom:1px dashed #ccc;
+    padding-bottom:4px;
 }
 
 .btnDelete{
@@ -49,9 +76,25 @@ body{
     color:white;
     border:none;
     cursor:pointer;
+    border-radius:4px;
+    padding:3px 6px;
 }
+
+/* TOTAL */
+#total{
+    font-size:22px;
+    font-weight:bold;
+}
+
+/* BOTÕES PAGAMENTO */
 .pagamentos button{
     width:100%;
     padding:10px;
     margin-top:5px;
+    border:none;
+    border-radius:6px;
+    background:#2980b9;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
 }
