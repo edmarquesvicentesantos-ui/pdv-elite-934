@@ -1,98 +1,205 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>PDV Elite 934</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDV Elite 934</title>
 
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-<script type="module" src="app.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
 
-<style>
-body{font-family:Arial;background:#f4f6f9;margin:0}
-.topo{background:#2c3e50;color:#fff;padding:15px;font-size:22px}
-.container{display:flex;padding:20px;gap:20px}
+    body {
+      background: #f1f1f1;
+    }
 
-.produtos button{
-  width:160px;height:60px;margin:5px;
-  border:0;border-radius:10px;background:#27ae60;color:#fff;
-  font-size:16px;cursor:pointer
-}
+    header {
+      background: #1f344a;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
 
-.ticket{
- width:320px;background:#fff;padding:20px;
- box-shadow:0 10px 20px rgba(0,0,0,.15);
- min-height:700px;font-family:Courier New
-}
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
 
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border:1px solid #ddd;padding:6px;text-align:left}
-.btn{margin-top:10px;padding:10px;border:0;border-radius:8px;cursor:pointer}
-.btn-fechar{background:#e74c3c;color:#fff}
-.btn-dividir{background:#3498db;color:#fff}
-</style>
+    .usuario {
+      font-size: 14px;
+    }
+
+    nav {
+      background: #294763;
+      display: flex;
+      gap: 10px;
+      padding: 12px;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: #35b55a;
+      border: none;
+      color: white;
+      padding: 12px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    nav button:hover {
+      background: #2a9448;
+    }
+
+    .container {
+      display: flex;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .produtos {
+      flex: 2;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .produtos h2 {
+      margin-bottom: 20px;
+    }
+
+    .grid-produtos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .produto {
+      background: #35b55a;
+      color: white;
+      border: none;
+      padding: 25px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .produto:hover {
+      background: #2c974a;
+    }
+
+    .comanda {
+      width: 350px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .mesa-info {
+      margin-bottom: 15px;
+      background: #f7f7f7;
+      padding: 10px;
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 10px;
+      border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+    .total {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .acoes {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .acoes button {
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+    }
+
+    .abrir {
+      background: #2196f3;
+    }
+
+    .fechar {
+      background: #f44336;
+    }
+
+    .dividir {
+      background: #ff9800;
+    }
+
+    .status {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 8px;
+      background: #e8f5e9;
+      color: #2e7d32;
+      font-size: 14px;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="topo">🍻 PDV Boteco 934</div>
+  <header>
+    <div class="logo">🍺 PDV Elite 934</div>
 
-<div class="container">
+    <div class="usuario">
+      Operador: Edmarques | Caixa 01
+    </div>
+  </header>
 
-<!-- PRODUTOS -->
-<div class="produtos">
-<h3>Produtos</h3>
-<button onclick="adicionarProduto('Cerveja Amstel',5)">Amstel</button>
-<button onclick="adicionarProduto('Heineken',7)">Heineken</button>
-<button onclick="adicionarProduto('Skol',4)">Skol</button>
-<button onclick="adicionarProduto('Refrigerante',6)">Refri</button>
-<button onclick="adicionarProduto('Água',3)">Água</button>
-</div>
+  <nav>
+    <button>🍺 Produtos</button>
+    <button>👥 Clientes</button>
+    <button>💰 Financeiro</button>
+    <button>🍽️ Mesas</button>
+    <button>📦 Estoque</button>
+    <button>📄 XML</button>
+    <button>📊 Relatórios</button>
+    <button>⚙️ Configurações</button>
+  </nav>
 
-<!-- CUPOM -->
-<div class="ticket">
+  <div class="container">
 
-<center>
-<b>BOTECO 934</b><br>
-Distribuidora & Restaurante<br>
-CNPJ: 00.000.000/0001-00<br>
-Rua Exemplo, 123 - Centro<br>
-Petrolina - PE<br>
-Tel: (87) 99999-9999
-</center>
+    <div class="produtos">
+      <h2>Produtos</h2>
 
-<hr>
-
-<b>Clientes da mesa</b><br>
-<select id="lista-clientes"></select>
-<button onclick="adicionarClienteMesa()">+ Cliente</button>
-
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Qtd</th>
-<th>Total</th>
-<th></th>
-</tr>
-</thead>
-<tbody id="itens-cupom"></tbody>
-</table>
-<div class="topo">
-    <button>Mesas</button>
-    <button>Clientes</button>
-    <button>Produtos</button>
-    <button>Financeiro</button>
-</div>
-<hr>
-Subtotal: R$ <span id="subtotal">0.00</span><br>
-Taxa 10%: R$ <span id="taxa">0.00</span><br>
-<b>Total: R$ <span id="total-geral">0.00</span></b>
-
-<button class="btn btn-dividir" onclick="dividirConta()">👥 Dividir Conta</button>
-<button class="btn btn-fechar" onclick="fecharMesa()">💰 Fechar Mesa</button>
-
-</div>
-</div>
-
-</body>
-</html>
+      <div class="grid-produtos">
+        <button class="produto">Amstel</button>
+        <button class="produto">Heineken</button>
+        <button class="produto">Skol</button>
+        <button class="produto">Refrigerante</button>
+        <button class="produto">Água</button>
+        <button class="produto">Whisky</button>
+        <bu
