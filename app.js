@@ -108,9 +108,19 @@ window.gerenciarMesa = async (id) => {
             const esc = parseInt(prompt(m)) - 1;
             if(prods[esc]) {
                 const item = prods[esc];
-                const novos = [...d.itens, {nome: item.nome, total: item.preco, qtd:1}];
-                await updateDoc(mRef, {itens: novos, total: d.total + item.preco});
-            }
+              const qtd = parseInt(prompt("Quantidade:", 1)) || 1
+const totalItem = item.preco * qtd
+
+const novos = [...d.itens, {
+    nome: item.nome,
+    qtd: qtd,
+    total: totalItem
+}]
+
+await updateDoc(mRef, {
+    itens: novos,
+    total: d.total + totalItem
+})
         } else if (acao === "2") {
             const pag = prompt("1.Pix 2.Dinheiro 3.Cartão");
             const f = {"1":"Pix","2":"Dinheiro","3":"Cartão"}[pag] || "Dinheiro";
