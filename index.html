@@ -2,49 +2,49 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>PDV Boteco 934</title>
-<link rel="stylesheet" href="style.css?v=2">
+<title>PDV Boteco</title>
+
+<style>
+body{
+  font-family: monospace;
+  background:#f4f4f4;
+  text-align:center;
+}
+#cupom{
+  width:300px;
+  background:#fff;
+  margin:20px auto;
+  padding:10px;
+  border:2px dashed #000;
+  text-align:left;
+}
+button{
+  padding:10px;
+  margin:5px;
+  font-size:16px;
+}
+</style>
 </head>
 
 <body>
 
-<div class="topo">
-    <button>Mesas</button>
-    <button>Clientes</button>
-    <button>Produtos</button>
-    <button>Financeiro</button>
+<h2>🍺 PDV BOTeco</h2>
+
+<button onclick="addProduto()">Lançar Produto</button>
+<button onclick="dividirConta()">Dividir Conta</button>
+<button onclick="imprimir()">🖨 Imprimir</button>
+<button onclick="whatsapp()">📲 WhatsApp</button>
+<button onclick="pagamento()">💰 Finalizar</button>
+
+<div id="cupom">
+<b>BOTECO 934</b><br>
+<hr>
+<div id="itens"></div>
+<hr>
+<b id="total">TOTAL: R$ 0.00</b>
+<div id="pagamentoInfo"></div>
 </div>
 
-<div class="container">
-
-    <div class="produtos">
-        <h2>Produtos</h2>
-
-        <button onclick="addItem('Amstel',5)">🍺 Amstel</button>
-        <button onclick="addItem('Heineken',7)">🍺 Heineken</button>
-        <button onclick="addItem('Skol',4)">🍺 Skol</button>
-        <button onclick="addItem('Refrigerante',5)">🥤 Refri</button>
-        <button onclick="addItem('Água',3)">💧 Água</button>
-    </div>
-
-    <div class="ticket">
-        <h2>BOTECO 934</h2>
-
-        <div id="cupom"></div>
-        <hr>
-        <div id="total">Total: R$ 0.00</div>
-
-        <div class="pagamentos">
-            <button onclick="pagar('Pix')">PIX</button>
-            <button onclick="pagar('Dinheiro')">Dinheiro</button>
-            <button onclick="pagar('Débito')">Cartão Débito</button>
-            <button onclick="pagar('Crédito')">Cartão Crédito</button>
-            <button onclick="pendura()">Pendura</button>
-        </div>
-    </div>
-
-</div>
-
-<script src="app.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
