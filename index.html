@@ -2,92 +2,68 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>PDV Elite 934</title>
-
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-<script type="module" src="app.js"></script>
-
-<style>
-body{font-family:Arial;background:#f4f6f9;margin:0}
-.topo{background:#2c3e50;color:#fff;padding:15px;font-size:22px}
-.container{display:flex;padding:20px;gap:20px}
-
-.produtos button{
-  width:160px;height:60px;margin:5px;
-  border:0;border-radius:10px;background:#27ae60;color:#fff;
-  font-size:16px;cursor:pointer
-}
-
-.ticket{
- width:320px;background:#fff;padding:20px;
- box-shadow:0 10px 20px rgba(0,0,0,.15);
- min-height:700px;font-family:Courier New
-}
-
-table{width:100%;border-collapse:collapse;margin-top:10px}
-th,td{border:1px solid #ddd;padding:6px;text-align:left}
-.btn{margin-top:10px;padding:10px;border:0;border-radius:8px;cursor:pointer}
-.btn-fechar{background:#e74c3c;color:#fff}
-.btn-dividir{background:#3498db;color:#fff}
-</style>
+<title>PDV Boteco 934</title>
+<link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="topo">🍻 PDV Boteco 934</div>
+<nav>
+  🍺 PDV Boteco 934
+</nav>
 
-<div class="container">
+<div class="container-principal">
 
-<!-- PRODUTOS -->
-<div class="produtos">
-<h3>Produtos</h3>
-<button onclick="adicionarProduto('Cerveja Amstel',5)">Amstel</button>
-<button onclick="adicionarProduto('Heineken',7)">Heineken</button>
-<button onclick="adicionarProduto('Skol',4)">Skol</button>
-<button onclick="adicionarProduto('Refrigerante',6)">Refri</button>
-<button onclick="adicionarProduto('Água',3)">Água</button>
+  <!-- PRODUTOS -->
+  <div class="lado-mesas">
+    <h2>Produtos</h2>
+
+    <button class="btn-add" onclick="adicionarProduto('Amstel',5)">Amstel</button>
+    <button class="btn-add" onclick="adicionarProduto('Heineken',7)">Heineken</button>
+    <button class="btn-add" onclick="adicionarProduto('Skol',4)">Skol</button>
+    <button class="btn-add" onclick="adicionarProduto('Refri',6)">Refri</button>
+    <button class="btn-add" onclick="adicionarProduto('Água',3)">Água</button>
+
+  </div>
+
+  <!-- CUPOM -->
+  <div class="lado-cupom">
+    <div class="ticket">
+
+      <div class="ticket-header">
+        <h2>BOTECO 934</h2>
+        Distribuidora & Restaurante<br>
+        Petrolina - PE
+      </div>
+
+      <h3>Clientes da mesa</h3>
+      <select id="lista-clientes"></select>
+      <button onclick="adicionarClienteMesa()">+ Cliente</button>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Qtd</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="itens-cupom"></tbody>
+      </table>
+
+      <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
+      <p>Taxa 10%: R$ <span id="taxa">0.00</span></p>
+
+      <h3>Total: R$ <span id="total-geral">0.00</span></h3>
+
+      <button class="btn-add" onclick="dividirConta()">👥 Dividir Conta</button>
+      <button class="btn-fechar" onclick="fecharMesa()">💰 Fechar Mesa</button>
+
+    </div>
+  </div>
+
 </div>
 
-<!-- CUPOM -->
-<div class="ticket">
-
-<center>
-<b>BOTECO 934</b><br>
-Distribuidora & Restaurante<br>
-CNPJ: 00.000.000/0001-00<br>
-Rua Exemplo, 123 - Centro<br>
-Petrolina - PE<br>
-Tel: (87) 99999-9999
-</center>
-
-<hr>
-
-<b>Clientes da mesa</b><br>
-<select id="lista-clientes"></select>
-<button onclick="adicionarClienteMesa()">+ Cliente</button>
-
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>Qtd</th>
-<th>Total</th>
-<th></th>
-</tr>
-</thead>
-<tbody id="itens-cupom"></tbody>
-</table>
-
-<hr>
-Subtotal: R$ <span id="subtotal">0.00</span><br>
-Taxa 10%: R$ <span id="taxa">0.00</span><br>
-<b>Total: R$ <span id="total-geral">0.00</span></b>
-
-<button class="btn btn-dividir" onclick="dividirConta()">👥 Dividir Conta</button>
-<button class="btn btn-fechar" onclick="fecharMesa()">💰 Fechar Mesa</button>
-
-</div>
-</div>
-
+<script src="app.js"></script>
 </body>
 </html>
