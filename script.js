@@ -1,62 +1,70 @@
-let pedidos = [];
-let total = 0;
+let clientes=[]
+let itens=[]
+let total=0
 
-function atualizarCupom(){
-  let html="";
-  pedidos.forEach(p=>{
-    html += `${p.nome} - R$ ${p.valor.toFixed(2)}<br>`;
-  });
-  document.getElementById("itens").innerHTML = html;
-  document.getElementById("total").innerHTML="TOTAL: R$ "+total.toFixed(2);
+function addCliente(){
+  let nome=document.getElementById("clienteNome").value
+  if(!nome) return alert("Digite nome do cliente")
+
+  clientes.push(nome)
+
+  let sel=document.getElementById("clientes")
+  let op=document.createElement("option")
+  op.text=nome
+  sel.add(op)
+
+  document.getElementById("clienteNome").value=""
 }
 
-function addProduto(){
-  let nome = prompt("Nome do produto:");
-  if(!nome) return;
+function addItem(nome,preco){
+  let cliente=document.getElementById("clientes").value
+  if(!cliente) return alert("Adicione cliente primeiro!")
 
-  let valor = parseFloat(prompt("Valor do produto:"));
-  if(isNaN(valor)) return;
-
-  pedidos.push({nome, valor});
-  total += valor;
-  atualizarCupom();
+  itens.push({cliente,nome,preco})
+  total+=preco
+  atualizar()
 }
 
-function dividirConta(){
-  if(total==0){ alert("Sem pedidos"); return; }
+function atualizar(){
+  let tabela=document.getElementById("lista")
+  tabela.innerHTML=""
 
-  let pessoas = parseInt(prompt("Dividir para quantas pessoas?"));
-  if(isNaN(pessoas) || pessoas<=1) return;
+  itens.forEach(i=>{
+    tabela.innerHTML+=`<tr>
+    <td>${i.cliente}</td>
+    <td>${i.nome}</td>
+    <td>R$ ${i.preco}</td>
+    </tr>`
+  })
 
-  let valorPessoa = total / pessoas;
-  alert("Cada pessoa paga R$ "+valorPessoa.toFixed(2));
+  document.getElementById("total").innerText="Total: R$ "+total.toFixed(2)
 }
 
-function pagamento(){
-  if(total==0){ alert("Sem pedidos"); return; }
+function dividir(){
+  let resumo={}
+  itens.forEach(i=>{
+    if(!resumo[i.cliente]) resumo[i.cliente]=0
+    resumo[i.cliente]+=i.preco
+  })
 
-  let forma = prompt("Forma: dinheiro / debito / credito / pix / pendura");
-
-  if(forma.toLowerCase()=="pendura"){
-    let nome = prompt("Nome do cliente do pendura:");
-    document.getElementById("pagamentoInfo").innerHTML =
-      "<br>🧾 PENDURA: "+nome;
-    return;
+  let msg="Divisão:\n\n"
+  for(let c in resumo){
+    msg+=c+" → R$ "+resumo[c].toFixed(2)+"\n"
   }
 
-  document.getElementById("pagamentoInfo").innerHTML =
-      "<br>Pagamento: "+forma;
+  alert(msg)
 }
 
-function imprimir(){
-  window.print();
-}
+function fechar(){
+  let texto="Pedido mesa:\n"
+  itens.forEach(i=>{
+    texto+=i.cliente+" - "+i.nome+" R$"+i.preco+"\n"
+  })
+  texto+="Total R$"+total
 
-function whatsapp(){
-  let texto="🍺 *BOTECO 934*%0A%0A";
-  pedidos.forEach(p=>{
-    texto += `${p.nome} - R$ ${p.valor.toFixed(2)}%0A`;
-  });
-  texto += "%0ATotal: R$ "+total.toFixed(2);
-  window.open("https://wa.me/?text="+texto);
+  window.open("https://wa.me/?text="+encodeURIComponent(texto))
+
+  itens=[]
+  total=0
+  atualizar()
 }
