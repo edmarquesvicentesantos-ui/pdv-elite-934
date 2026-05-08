@@ -15,102 +15,132 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 let mesaAtivaId = null;
 
-// --- GESTÃO DE PRODUTOS ---
+// --- NAVEGAÇÃO ---
+window.switchTab = async (tabName) => {
+    // Esconde todas as abas
+    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+    // Mostra a aba clicada
+    const target = document.getElementById('tab-' + tabName);
+    if (target) {
+        target.style.display = (tabName === 'mesas') ? 'flex' : 'block';
+    }
+
+    if (tabName === 'clientes') carregarClientes();
+    if (tabName === 'produtos') carregarProdutos();
+    if (tabName === 'dre') carregarFinanceiro();
+};
+
+// --- FUNÇÕES DE CARREGAMENTO ---
+async function carregarClientes() {
+    const snap = await getDocs(collection(db, "clientes"));
+    const corpo = document.getElementById('corpo-clientes');
+    corpo.innerHTML = "";
+    snap.forEach(doc => {
+        const d = doc.data();
+        corpo.innerHTML += `<tr><td>${d.nome}</td><td>${d.contato}</td></tr>`;
+    });
+}
+
+async function carregarProdutos() {
+    const snap = await getDocs(collection(db, "produtos"));
+    const corpo = document.getElementById('corpo-produtos');
+    corpo.innerHTML = "";
+    snap.forEach(doc => {
+        const d = doc.data();
+        corpo.innerHTML += `<tr><td>${d.nome}</td><td>R$ ${d.preco.toFixed(2)}</td><td>${d.barras || '-'}</td></tr>`;
+    });
+}
+
+async function carregarFinanceiro() {
+    const snap = await getDocs(collection(db, "vendas"));
+    const corpo = document.getElementById('corpo-vendas');
+    const resumo = document.getElementById('resumo-caixa');
+    let totalGeral = 0;
+    corpo.innerHTML = "";
+    snap.forEach(doc => {
+        const d = doc.data();
+        totalGeral += d.total;
+        const dataFmt = d.data?.toDate ? d.data.toDate().toLocaleString() : '---';
+        corpo.innerHTML += `<tr><td>${dataFmt}</td><td>${d.cliente}</td><td>R$ ${d.total.toFixed(2)}</td><td>${d.forma}</td></tr>`;
+    });
+    resumo.innerHTML = `<h3 style="margin:0; color:green;">CAIXA TOTAL: R$ ${totalGeral.toFixed(2)}</h3>`;
+}
+
+// --- CADASTROS ---
+window.cadastrarCliente = async () => {
+    const nome = prompt("Nome:");
+    const fone = prompt("WhatsApp:");
+    if(nome) { await addDoc(collection(db, "clientes"), {nome, contato: fone}); carregarClientes(); }
+};
+
 window.cadastrarProduto = async () => {
-    const nome = prompt("Nome do Produto:");
-    const preco = parseFloat(prompt("Preço R$:"));
-    const barras = prompt("Bipe ou Digite o Código de Barras:");
-    if (nome && preco) {
-        await addDoc(collection(db, "produtos"), { nome, preco, barras: barras || "" });
-        window.switchTab('produtos');
-    }
+    const nome = prompt("Produto:");
+    const preco = parseFloat(prompt("Preço:"));
+    const barras = prompt("Código de Barras:");
+    if(nome && preco) { await addDoc(collection(db, "produtos"), {nome, preco, barras}); carregarProdutos(); }
 };
 
-// --- GESTÃO DE MESAS ---
 window.configurarMesas = async () => {
-    const qtd = parseInt(prompt("Quantas mesas o boteco tem agora?"));
-    if (qtd) {
-        for (let i = 1; i <= qtd; i++) {
-            await setDoc(doc(db, "mesas", i.toString()), { status: 'livre', cliente: '', total: 0, itens: [] }, { merge: true });
+    const qtd = prompt("Quantas mesas?");
+    if(qtd) {
+        for(let i=1; i<=qtd; i++) {
+            await setDoc(doc(db, "mesas", i.toString()), {status:'livre', cliente:'', total:0, itens:[]}, {merge:true});
         }
-        alert("Salão configurado!");
     }
 };
 
+// --- MESA E CUPOM ---
 window.gerenciarMesa = async (id) => {
     mesaAtivaId = id;
     const mRef = doc(db, "mesas", id);
     const mSnap = await getDoc(mRef);
-    const dados = mSnap.data();
+    const d = mSnap.data();
 
-    if (dados.status === 'livre') {
-        const nome = prompt("Cliente da Mesa " + id + ":");
-        if (nome) await updateDoc(mRef, { status: 'ocupada', cliente: nome, total: 0, itens: [] });
+    if(d.status === 'livre') {
+        const n = prompt("Cliente:");
+        if(n) await updateDoc(mRef, {status:'ocupada', cliente:n, total:0, itens:[]});
     } else {
-        const acao = prompt("MESA " + id + "\n1. Lançar Produto\n2. Fechar Conta (Zerar)");
-        if (acao === "1") {
+        const acao = prompt("1. Lançar Item\n2. Fechar Conta");
+        if(acao === "1") {
             const pSnap = await getDocs(collection(db, "produtos"));
-            let lista = "PRODUTOS:\n", prods = [];
-            pSnap.forEach(p => {
-                prods.push({id: p.id, ...p.data()});
-                lista += `${prods.length}. ${p.data().nome} (R$ ${p.data().preco})\n`;
-            });
-            const escolha = parseInt(prompt(lista)) - 1;
-            const qtd = parseInt(prompt("Quantidade:", "1")) || 1;
-            if (prods[escolha]) {
-                const p = prods[escolha];
-                const novosItens = [...(dados.itens || []), { nome: p.nome, preco: p.preco, qtd, total: p.preco * qtd }];
-                await updateDoc(mRef, { itens: novosItens, total: (dados.total || 0) + (p.preco * qtd) });
+            let m = "Escolha:\n", prods = [];
+            pSnap.forEach(p => { prods.push(p.data()); m += `${prods.length}. ${p.data().nome}\n`; });
+            const esc = parseInt(prompt(m)) - 1;
+            if(prods[esc]) {
+                const item = prods[esc];
+                const novos = [...d.itens, {nome: item.nome, total: item.preco, qtd:1}];
+                await updateDoc(mRef, {itens: novos, total: d.total + item.preco});
             }
         } else if (acao === "2") {
-            if(confirm("Deseja limpar a mesa?")) await updateDoc(mRef, { status: 'livre', cliente: '', total: 0, itens: [] });
+            const pag = prompt("1.Pix 2.Dinheiro 3.Cartão");
+            const f = {"1":"Pix","2":"Dinheiro","3":"Cartão"}[pag] || "Dinheiro";
+            await addDoc(collection(db, "vendas"), {data: new Date(), cliente: d.cliente, total: d.total, forma: f});
+            await updateDoc(mRef, {status:'livre', cliente:'', total:0, itens:[]});
+            mesaAtivaId = null;
         }
     }
 };
 
-// --- RENDERIZADORES ---
+onSnapshot(collection(db, "mesas"), (snap) => {
+    const grid = document.getElementById('mesaGrid');
+    if(!grid) return;
+    grid.innerHTML = "";
+    snap.docs.sort((a,b)=>parseInt(a.id)-parseInt(b.id)).forEach(docSnap => {
+        const m = docSnap.data();
+        const border = (mesaAtivaId === docSnap.id) ? 'border:3px solid #3498db' : '';
+        grid.innerHTML += `<div class="mesa ${m.status}" style="${border}" onclick="window.gerenciarMesa('${docSnap.id}')">
+            <h3>Mesa ${docSnap.id}</h3><p>${m.cliente || 'Livre'}</p><b>R$ ${(m.total||0).toFixed(2)}</b></div>`;
+        if(mesaAtivaId === docSnap.id) atualizarVisualCupom(docSnap.id, m);
+    });
+});
+
 function atualizarVisualCupom(id, dados) {
     const div = document.getElementById('conteudo-cupom');
-    if (!div) return;
-    let html = `<div style="text-align:center"><strong>BOTECO 934</strong><br>MESA ${id} - ${dados.cliente}</div><hr style="border-top:1px dashed #000">`;
-    (dados.itens || []).forEach(i => {
-        html += `<div style="display:flex; justify-content:space-between; font-size:0.9em"><span>${i.qtd}x ${i.nome}</span><span>R$ ${i.total.toFixed(2)}</span></div>`;
-    });
-    html += `<hr style="border-top:2px solid #000"><div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.1em"><span>TOTAL:</span><span>R$ ${dados.total.toFixed(2)}</span></div>`;
-    html += `<div style="text-align:center; margin-top:15px;"><svg id="barcode"></svg></div>`;
-    html += `<button class="btn-fechar" onclick="window.gerenciarMesa('${id}')">AÇÕES / LANÇAR</button>`;
-    div.innerHTML = html;
-
-    // GERA O CÓDIGO DE BARRAS NO CUPOM BASEADO NO NÚMERO DA MESA
-    JsBarcode("#barcode", "MESA-" + id, { format: "CODE128", width: 1.5, height: 40, displayValue: true });
-}
-
-window.switchTab = async (tab) => {
-    const main = document.getElementById('main-content');
-    if (tab === 'mesas') {
-        main.innerHTML = `<div class="lado-mesas"><button class="btn-add" onclick="window.configurarMesas()">+ Configurar Salão</button><div class="grid-mesas" id="mesaGrid"></div></div><div class="lado-cupom"><div class="ticket" id="conteudo-cupom"><p style="text-align:center; margin-top:100px;">Selecione uma mesa</p></div></div>`;
-        iniciarSnapshot();
-    }
-    if (tab === 'produtos') {
-        const pSnap = await getDocs(collection(db, "produtos"));
-        let linhas = "";
-        pSnap.forEach(p => { linhas += `<tr><td>${p.data().nome}</td><td>R$ ${p.data().preco.toFixed(2)}</td><td>${p.data().barras || '-'}</td></tr>`; });
-        main.innerHTML = `<div style="padding:20px; width:100%"><h2>Produtos</h2><button class="btn-add" onclick="window.cadastrarProduto()">+ Novo Produto</button><table><thead><tr><th>Nome</th><th>Preço</th><th>Cód. Barras</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
-    }
-};
-
-function iniciarSnapshot() {
-    onSnapshot(collection(db, "mesas"), (snap) => {
-        const grid = document.getElementById('mesaGrid');
-        if (!grid) return;
-        grid.innerHTML = "";
-        snap.docs.sort((a,b) => parseInt(a.id) - parseInt(b.id)).forEach(docSnap => {
-            const m = docSnap.data();
-            const border = (mesaAtivaId === docSnap.id) ? 'border:3px solid #3498db' : '';
-            grid.innerHTML += `<div class="mesa ${m.status}" style="${border}" onclick="window.gerenciarMesa('${docSnap.id}')"><h3>Mesa ${docSnap.id}</h3><p>${m.cliente || 'Livre'}</p><b>R$ ${(m.total || 0).toFixed(2)}</b></div>`;
-            if (mesaAtivaId === docSnap.id) atualizarVisualCupom(docSnap.id, m);
-        });
-    });
+    let h = `<div style="text-align:center"><strong>BOTECO 934</strong><br>MESA ${id}</div><hr>`;
+    dados.itens.forEach(i => h += `<div style="display:flex; justify-content:space-between"><span>${i.nome}</span><span>R$ ${i.total.toFixed(2)}</span></div>`);
+    h += `<hr><b>TOTAL: R$ ${dados.total.toFixed(2)}</b><div style="text-align:center;margin-top:10px;"><svg id="barcode"></svg></div>`;
+    div.innerHTML = h;
+    JsBarcode("#barcode", "MESA-"+id, {width:1.5, height:40});
 }
 
 window.switchTab('mesas');
