@@ -12,7 +12,62 @@
 <div class="topo">
     <button onclick="alert('Cadastro de Clientes em breve')">Clientes</button>
     <button onclick="alert('Controle de Mesas em breve')">Mesas</button>
-    <button onclick="alert('Cadastro de Produtos em breve')">Produtos</button>
+    <button onclick="alert('Cadastro de Produtos e<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>PDV Boteco 934</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- MENU SUPERIOR -->
+<div class="topo">
+    <button onclick="alert('Modulo Mesas virá na próxima etapa')">Mesas</button>
+    <button onclick="alert('Modulo Clientes virá na próxima etapa')">Clientes</button>
+    <button onclick="alert('Modulo Produtos virá na próxima etapa')">Produtos</button>
+    <button onclick="alert('Modulo Financeiro virá na próxima etapa')">Financeiro</button>
+</div>
+
+<div class="container">
+
+    <!-- PRODUTOS -->
+    <div class="produtos">
+        <h2>🍺 Produtos</h2>
+
+        <button onclick="addItem('Amstel',5)">🍺 Amstel - R$5</button>
+        <button onclick="addItem('Heineken',7)">🍺 Heineken - R$7</button>
+        <button onclick="addItem('Skol',4)">🍺 Skol - R$4</button>
+        <button onclick="addItem('Refrigerante',6)">🥤 Refri - R$6</button>
+        <button onclick="addItem('Água',3)">💧 Água - R$3</button>
+    </div>
+
+    <!-- CUPOM -->
+    <div class="ticket">
+        <h2>BOTECO 934</h2>
+        <div id="cupom"></div>
+
+        <hr>
+        <div id="total">Total: R$ 0</div>
+
+        <h3>Pagamento</h3>
+        <div class="pagamentos">
+            <button onclick="pagar('Débito')">Cartão Débito</button>
+            <button onclick="pagar('Crédito')">Cartão Crédito</button>
+            <button onclick="pagar('Pix')">PIX</button>
+            <button onclick="pagar('Dinheiro')">Dinheiro</button>
+            <button onclick="pendurar()">Pendura</button>
+            <button onclick="imprimir()">🖨️ Imprimir</button>
+            <button onclick="whats()">📲 WhatsApp</button>
+        </div>
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>m breve')">Produtos</button>
     <button onclick="alert('Financeiro em breve')">Financeiro</button>
 </div>
 
