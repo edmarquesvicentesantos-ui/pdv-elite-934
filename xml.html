@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Importador XML</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📄 Importador XML
+    </div>
+
+    <div class="usuario">
+      PDV Elite 934
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Importar Nota Fiscal XML</h2>
+
+      <br>
+
+      <input
+        type="file"
+        id="arquivoXML"
+        accept=".xml"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="lerXML()"
+      >
+
+        📥 Importar XML
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href = "index.html";
+
+    }
+
+    function lerXML(){
+
+      let arquivo =
+        document.getElementById("arquivoXML").files[0];
+
+      if(!arquivo){
+
+        alert("Selecione um arquivo XML");
+
+        return;
+
+      }
+
+      let leitor = new FileReader();
+
+      leitor.onload = function(e){
+
+        let conteudo = e.target.result;
+
+        let parser = new DOMParser();
+
+        let xml =
+          parser.parseFromString(conteudo, "text/xml");
+
+        let produtos =
+          xml.getElementsByTagName("det");
+
+        let html = `
+
+          <table>
+
+            <tr>
+
+              <th>Produto</th>
+              <th>Qtd</th>
+              <th>Valor</th>
+
+            </tr>
+
+        `;
+
+        for(let i = 0; i < produtos.length; i++){
+
+          let nome =
+            produtos[i]
+            .getElementsByTagName("xProd")[0]
+            ?.textContent || "Produto";
+
+          let qtd =
+            produtos[i]
+            .getElementsByTagName("qCom")[0]
+            ?.textContent || "0";
+
+          let valor =
+            produtos[i]
+            .getElementsByTagName("vUnCom")[0]
+            ?.textContent || "0";
+
+          html += `
+
+            <tr>
+
+              <td>${nome}</td>
+              <td>${qtd}</td>
+              <td>R$ ${valor}</td>
+
+            </tr>
+
+          `;
+
+        }
+
+        html += `</table>`;
+
+        document
+          .getElementById("resultado")
+          .innerHTML = html;
+
+      };
+
+      leitor.readAsText(arquivo);
+
+    }
+
+  </script>
+
+</body>
+
+</html>
