@@ -20,3 +20,8 @@ th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
 th { background: #eee; }
 
 .btn-add { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+#main-content { display: flex; width: 100%; }
+.lado-mesas { flex: 2; padding: 20px; }
+.lado-cupom { flex: 1; padding: 20px; background: #ddd; }
+table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
