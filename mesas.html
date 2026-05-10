@@ -88,7 +88,8 @@
       addDoc,
       getDocs,
       deleteDoc,
-      doc
+      doc,
+      updateDoc
 
     } from
     "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -119,8 +120,13 @@
         await addDoc(collection(db, "mesas"), {
 
           cliente: cliente,
+
           status: "Aberta",
+
           total: 0,
+
+          itens: [],
+
           criadaEm: new Date()
 
         });
@@ -168,16 +174,40 @@
 
         let mesa = docItem.data();
 
+        let itensHTML = "";
+
+        if(mesa.itens){
+
+          mesa.itens.forEach((item) => {
+
+            itensHTML += `
+
+              <tr>
+
+                <td>${item.produto}</td>
+                <td>${item.quantidade}</td>
+                <td>R$ ${item.total}</td>
+
+              </tr>
+
+            `;
+
+          });
+
+        }
+
         lista.innerHTML += `
 
           <div class="mesa-info">
 
             <strong>Cliente:</strong>
             ${mesa.cliente}
+
             <br>
 
             <strong>Status:</strong>
             ${mesa.status}
+
             <br>
 
             <strong>Total:</strong>
@@ -185,9 +215,63 @@
 
             <br><br>
 
+            <input
+              type="text"
+              id="produto-${docItem.id}"
+              placeholder="Produto"
+              class="campo"
+            >
+
+            <br><br>
+
+            <input
+              type="number"
+              id="quantidade-${docItem.id}"
+              placeholder="Quantidade"
+              class="campo"
+            >
+
+            <br><br>
+
+            <input
+              type="number"
+              id="valor-${docItem.id}"
+              placeholder="Valor"
+              class="campo"
+            >
+
+            <br><br>
+
+            <button
+              class="abrir"
+              onclick="adicionarProduto('${docItem.id}')"
+            >
+
+              ➕ Adicionar Produto
+
+            </button>
+
+            <br><br>
+
+            <table>
+
+              <tr>
+
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Total</th>
+
+              </tr>
+
+              ${itensHTML}
+
+            </table>
+
+            <br>
+
             <button
               class="fechar"
-              onclick="excluirMesa('${docItem.id}')"
+              onclick="fecharMesa('${docItem.id}')"
             >
 
               ❌ Fechar Mesa
@@ -204,7 +288,73 @@
 
     }
 
-    async function excluirMesa(id){
+    async function adicionarProduto(id){
+
+      let produto =
+        document.getElementById(`produto-${id}`).value;
+
+      let quantidade =
+        Number(
+          document.getElementById(`quantidade-${id}`).value
+        );
+
+      let valor =
+        Number(
+          document.getElementById(`valor-${id}`).value
+        );
+
+      if(produto === ""){
+
+        alert("Informe o produto");
+
+        return;
+
+      }
+
+      const querySnapshot =
+        await getDocs(collection(db, "mesas"));
+
+      querySnapshot.forEach(async (docItem) => {
+
+        if(docItem.id === id){
+
+          let mesa = docItem.data();
+
+          let itens = mesa.itens || [];
+
+          let totalItem =
+            quantidade * valor;
+
+          itens.push({
+
+            produto: produto,
+            quantidade: quantidade,
+            valor: valor,
+            total: totalItem
+
+          });
+
+          let novoTotal =
+            Number(mesa.total) + totalItem;
+
+          await updateDoc(doc(db, "mesas", id), {
+
+            itens: itens,
+            total: novoTotal
+
+          });
+
+          carregarMesas();
+
+        }
+
+      });
+
+    }
+
+    window.adicionarProduto = adicionarProduto;
+
+    async function fecharMesa(id){
 
       if(confirm("Deseja fechar esta mesa?")){
 
@@ -216,7 +366,7 @@
 
     }
 
-    window.excluirMesa = excluirMesa;
+    window.fecharMesa = fecharMesa;
 
     carregarMesas();
 
