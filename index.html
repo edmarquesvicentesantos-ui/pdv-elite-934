@@ -4,7 +4,9 @@
 <head>
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
 
   <title>PDV Elite 934</title>
 
@@ -28,12 +30,12 @@
 
   <nav>
 
-    <button onclick="abrirPagina('produtos.html')">
-      🍺 Produtos
-    </button>
-
     <button onclick="abrirPagina('clientes.html')">
       👥 Clientes
+    </button>
+
+    <button onclick="abrirPagina('produtos.html')">
+      🍺 Produtos
     </button>
 
     <button onclick="abrirPagina('financeiro.html')">
@@ -70,15 +72,61 @@
 
       <div class="grid-produtos">
 
-        <button class="produto">Amstel</button>
-        <button class="produto">Heineken</button>
-        <button class="produto">Skol</button>
-        <button class="produto">Refrigerante</button>
-        <button class="produto">Água</button>
-        <button class="produto">Whisky</button>
-        <button class="produto">Porção</button>
-        <button class="produto">Espetinho</button>
-        <button class="produto">Seleta</button>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Amstel', 10)"
+        >
+          🍺 Amstel
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Heineken', 12)"
+        >
+          🍺 Heineken
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Skol', 8)"
+        >
+          🍺 Skol
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Refrigerante', 6)"
+        >
+          🥤 Refrigerante
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Água', 4)"
+        >
+          💧 Água
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Whisky', 25)"
+        >
+          🥃 Whisky
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Porção', 35)"
+        >
+          🍟 Porção
+        </button>
+
+        <button
+          class="produto"
+          onclick="adicionarProduto('Espetinho', 15)"
+        >
+          🍢 Espetinho
+        </button>
 
       </div>
 
@@ -86,15 +134,24 @@
 
     <div class="comanda">
 
-      <h2>🍽️ Mesa 01</h2>
+      <h2>
+        🍽️ Mesa 01
+      </h2>
 
       <div class="mesa-info">
 
-        <strong>Cliente:</strong> João Silva<br>
+        <strong>Cliente:</strong>
+        João Silva
 
-        <strong>Garçom:</strong> Carlos<br>
+        <br>
 
-        <strong>Status:</strong> Mesa Aberta
+        <strong>Garçom:</strong>
+        Carlos
+
+        <br>
+
+        <strong>Status:</strong>
+        Mesa Aberta
 
       </div>
 
@@ -112,7 +169,7 @@
 
         </thead>
 
-        <tbody>
+        <tbody id="itensMesa">
 
           <tr>
 
@@ -134,10 +191,8 @@
 
       </table>
 
-      <div class="total">
-
+      <div class="total" id="totalMesa">
         Total: R$ 69,00
-
       </div>
 
       <div class="acoes">
@@ -157,16 +212,52 @@
       </div>
 
       <div class="status">
-
         ✔ Mesa só poderá ser fechada após pagamento total.
-
       </div>
 
     </div>
 
   </div>
 
-  <script src="script.js"></script>
+  <script>
+
+    function abrirPagina(pagina){
+
+      window.location.href = pagina;
+
+    }
+
+    let total = 69;
+
+    function adicionarProduto(nome, valor){
+
+      let tabela =
+        document.getElementById("itensMesa");
+
+      let linha =
+        document.createElement("tr");
+
+      linha.innerHTML = `
+
+        <td>${nome}</td>
+        <td>1</td>
+        <td>R$ ${valor},00</td>
+
+      `;
+
+      tabela.appendChild(linha);
+
+      total += valor;
+
+      document
+        .getElementById("totalMesa")
+        .innerHTML =
+        `Total: R$ ${total},00`;
+
+    }
+
+  </script>
 
 </body>
+
 </html>
