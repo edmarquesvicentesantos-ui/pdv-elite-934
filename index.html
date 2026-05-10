@@ -1,1 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
 
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Caixa PDV</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      💰 Caixa PDV Elite 934
+    </div>
+
+    <div class="usuario">
+      Operador: Edmarques
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Fechamento da Conta</h2>
+
+      <br>
+
+      <div class="mesa-info">
+
+        <strong>Mesa:</strong> 01
+        <br>
+
+        <strong>Cliente:</strong> João Silva
+        <br>
+
+        <strong>Total:</strong>
+
+        <span id="valorTotal">
+          R$ 121,00
+        </span>
+
+      </div>
+
+      <br>
+
+      <h3>Forma de Pagamento</h3>
+
+      <br>
+
+      <button
+        class="produto"
+        onclick="pagar('Dinheiro')"
+      >
+
+        💵 Dinheiro
+
+      </button>
+
+      <button
+        class="produto"
+        onclick="pagar('PIX')"
+      >
+
+        📱 PIX
+
+      </button>
+
+      <button
+        class="produto"
+        onclick="pagar('Cartão')"
+      >
+
+        💳 Cartão
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href = "index.html";
+
+    }
+
+    function pagar(tipo){
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            ✔ Pagamento realizado via ${tipo}
+
+            <br><br>
+
+            ✔ Mesa fechada com sucesso
+
+          </div>
+
+        `;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
