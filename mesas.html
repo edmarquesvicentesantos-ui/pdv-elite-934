@@ -5,6 +5,9 @@
 
   <meta charset="UTF-8">
 
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Mesas</title>
 
   <link rel="stylesheet" href="style.css">
@@ -17,6 +20,10 @@
 
     <div class="logo">
       🍽️ Controle de Mesas
+    </div>
+
+    <div class="usuario">
+      PDV Elite 934
     </div>
 
   </header>
@@ -33,37 +40,185 @@
 
     <div class="produtos">
 
-      <h2>Mesas</h2>
+      <h2>Abrir Nova Mesa</h2>
 
       <br>
 
-      <button class="produto">
-        Mesa 01 - Aberta
+      <input
+        type="text"
+        id="cliente"
+        placeholder="Nome do Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="abrirMesa()"
+      >
+
+        ➕ Abrir Mesa
+
       </button>
 
       <br><br>
 
-      <button class="produto">
-        Mesa 02 - Livre
-      </button>
+      <div id="mensagem"></div>
 
-      <br><br>
+      <br>
 
-      <button class="produto">
-        Mesa 03 - Aberta
-      </button>
+      <h2>Mesas Abertas</h2>
+
+      <br>
+
+      <div id="listaMesas"></div>
 
     </div>
 
   </div>
 
-  <script>
+  <script type="module">
+
+    import { db } from "./firebase.js";
+
+    import {
+
+      collection,
+      addDoc,
+      getDocs,
+      deleteDoc,
+      doc
+
+    } from
+    "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     function voltar(){
 
       window.location.href = "index.html";
 
     }
+
+    window.voltar = voltar;
+
+    async function abrirMesa(){
+
+      let cliente =
+        document.getElementById("cliente").value;
+
+      if(cliente === ""){
+
+        alert("Informe o nome do cliente");
+
+        return;
+
+      }
+
+      try{
+
+        await addDoc(collection(db, "mesas"), {
+
+          cliente: cliente,
+          status: "Aberta",
+          total: 0,
+          criadaEm: new Date()
+
+        });
+
+        document
+          .getElementById("mensagem")
+          .innerHTML = `
+
+            <div class="status">
+
+              ✔ Mesa aberta com sucesso!
+
+            </div>
+
+          `;
+
+        document
+          .getElementById("cliente").value = "";
+
+        carregarMesas();
+
+      } catch(erro){
+
+        console.log(erro);
+
+        alert("Erro ao abrir mesa");
+
+      }
+
+    }
+
+    window.abrirMesa = abrirMesa;
+
+    async function carregarMesas(){
+
+      let lista =
+        document.getElementById("listaMesas");
+
+      lista.innerHTML = "";
+
+      const querySnapshot =
+        await getDocs(collection(db, "mesas"));
+
+      querySnapshot.forEach((docItem) => {
+
+        let mesa = docItem.data();
+
+        lista.innerHTML += `
+
+          <div class="mesa-info">
+
+            <strong>Cliente:</strong>
+            ${mesa.cliente}
+            <br>
+
+            <strong>Status:</strong>
+            ${mesa.status}
+            <br>
+
+            <strong>Total:</strong>
+            R$ ${mesa.total}
+
+            <br><br>
+
+            <button
+              class="fechar"
+              onclick="excluirMesa('${docItem.id}')"
+            >
+
+              ❌ Fechar Mesa
+
+            </button>
+
+          </div>
+
+          <br>
+
+        `;
+
+      });
+
+    }
+
+    async function excluirMesa(id){
+
+      if(confirm("Deseja fechar esta mesa?")){
+
+        await deleteDoc(doc(db, "mesas", id));
+
+        carregarMesas();
+
+      }
+
+    }
+
+    window.excluirMesa = excluirMesa;
+
+    carregarMesas();
 
   </script>
 
