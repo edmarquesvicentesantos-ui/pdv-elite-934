@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Vendas PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      💰 Relatório de Vendas
+    </div>
+
+    <div class="usuario">
+      Administrador
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Vendas Realizadas</h2>
+
+      <br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Total</th>
+            <th>Pagamento</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="tabelaVendas">
+
+        </tbody>
+
+      </table>
+
+      <br>
+
+      <div class="total">
+
+        Total Faturado:
+        <span id="faturamento">
+          R$ 0,00
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let vendas =
+      JSON.parse(
+        localStorage.getItem("historicoVendas")
+      ) || [];
+
+    let tabela =
+      document.getElementById("tabelaVendas");
+
+    let total = 0;
+
+    vendas.forEach((venda) => {
+
+      let linha =
+        document.createElement("tr");
+
+      linha.innerHTML = `
+
+        <td>${venda.data}</td>
+        <td>${venda.cliente}</td>
+        <td>R$ ${venda.total},00</td>
+        <td>${venda.pagamento}</td>
+        <td>✔ Pago</td>
+
+      `;
+
+      tabela.appendChild(linha);
+
+      total += venda.total;
+
+    });
+
+    document
+      .getElementById("faturamento")
+      .innerHTML =
+      `R$ ${total},00`;
+
+  </script>
+
+</body>
+
+</html>
