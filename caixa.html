@@ -189,28 +189,54 @@
 
     function pagar(tipo){
 
-      document
-        .getElementById("resultado")
-        .innerHTML = `
+  document
+    .getElementById("resultado")
+    .innerHTML = `
 
-          <div class="status">
+      <div class="status">
 
-            ✔ Pagamento realizado via ${tipo}
+        ✔ Pagamento realizado via ${tipo}
 
-            <br><br>
+        <br><br>
 
-            ✔ Mesa fechada com sucesso
+        ✔ Mesa fechada com sucesso
 
-          </div>
+      </div>
 
-        `;
+    `;
 
-      localStorage.removeItem("itensMesa");
+  let historico =
+    JSON.parse(
+      localStorage.getItem("historicoVendas")
+    ) || [];
 
-      localStorage.removeItem("totalMesa");
+  historico.push({
 
-    }
+    data:
+      new Date().toLocaleString(),
 
+    cliente:
+      document.getElementById("clienteNome")
+      .innerText,
+
+    total:
+      Number(total),
+
+    pagamento:
+      tipo
+
+  });
+
+  localStorage.setItem(
+    "historicoVendas",
+    JSON.stringify(historico)
+  );
+
+  localStorage.removeItem("itensMesa");
+
+  localStorage.removeItem("totalMesa");
+
+}
   </script>
 
 </body>
