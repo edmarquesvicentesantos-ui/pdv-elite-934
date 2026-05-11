@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>WhatsApp PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📲 WhatsApp Clientes
+    </div>
+
+    <div class="usuario">
+      Comunicação
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Enviar Mensagem</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="telefone"
+        placeholder="Telefone Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <textarea
+        id="mensagem"
+        placeholder="Digite a mensagem"
+        class="campo"
+      ></textarea>
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="enviarWhatsApp()"
+      >
+
+        📲 Enviar WhatsApp
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function enviarWhatsApp(){
+
+      let telefone =
+        document.getElementById(
+          "telefone"
+        ).value;
+
+      let mensagem =
+        document.getElementById(
+          "mensagem"
+        ).value;
+
+      let url =
+
+      "https://wa.me/55" +
+      telefone +
+      "?text=" +
+      encodeURIComponent(mensagem);
+
+      window.open(url, "_blank");
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            ✔ WhatsApp preparado com sucesso
+
+          </div>
+
+        `;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
