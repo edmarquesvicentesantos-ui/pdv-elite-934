@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Dashboard Premium</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    .cards{
+
+      display: grid;
+
+      grid-template-columns:
+      repeat(auto-fit, minmax(220px,1fr));
+
+      gap: 20px;
+
+    }
+
+    .card{
+
+      background: #1e1e1e;
+
+      padding: 20px;
+
+      border-radius: 15px;
+
+      text-align: center;
+
+      box-shadow:
+      0 0 10px rgba(0,0,0,0.3);
+
+    }
+
+    .card h2{
+
+      font-size: 35px;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📈 Dashboard Premium
+    </div>
+
+    <div class="usuario">
+      Gestão Inteligente
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <div class="cards">
+
+        <div class="card">
+
+          <h3>💰 Faturamento</h3>
+
+          <h2 id="faturamento">
+            R$ 0
+          </h2>
+
+        </div>
+
+        <div class="card">
+
+          <h3>📋 Vendas</h3>
+
+          <h2 id="vendas">
+            0
+          </h2>
+
+        </div>
+
+        <div class="card">
+
+          <h3>🍽️ Mesas</h3>
+
+          <h2 id="mesas">
+            0
+          </h2>
+
+        </div>
+
+        <div class="card">
+
+          <h3>📦 Estoque</h3>
+
+          <h2 id="estoque">
+            0
+          </h2>
+
+        </div>
+
+        <div class="card">
+
+          <h3>💵 Financeiro</h3>
+
+          <h2 id="financeiro">
+            R$ 0
+          </h2>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let vendas =
+      JSON.parse(
+        localStorage.getItem("historicoVendas")
+      ) || [];
+
+    let mesas =
+      JSON.parse(
+        localStorage.getItem("mesasAbertas")
+      ) || [];
+
+    let estoque =
+      JSON.parse(
+        localStorage.getItem("estoqueProdutos")
+      ) || [];
+
+    let financeiro =
+      JSON.parse(
+        localStorage.getItem("financeiro")
+      ) || [];
+
+    let faturamento = 0;
+
+    vendas.forEach((venda) => {
+
+      faturamento +=
+        Number(venda.total);
+
+    });
+
+    let saldo = 0;
+
+    financeiro.forEach((movimento) => {
+
+      if(movimento.tipo == "entrada"){
+
+        saldo +=
+          Number(movimento.valor);
+
+      } else {
+
+        saldo -=
+          Number(movimento.valor);
+
+      }
+
+    });
+
+    document
+      .getElementById("faturamento")
+      .innerHTML =
+      `R$ ${faturamento}`;
+
+    document
+      .getElementById("vendas")
+      .innerHTML =
+      vendas.length;
+
+    document
+      .getElementById("mesas")
+      .innerHTML =
+      mesas.length;
+
+    document
+      .getElementById("estoque")
+      .innerHTML =
+      estoque.length;
+
+    document
+      .getElementById("financeiro")
+      .innerHTML =
+      `R$ ${saldo}`;
+
+  </script>
+
+</body>
+
+</html>
