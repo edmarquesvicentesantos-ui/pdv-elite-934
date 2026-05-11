@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Impressão PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    .recibo{
+
+      background: white;
+
+      padding: 20px;
+
+      border-radius: 10px;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🖨️ Impressão PDV Elite 934
+    </div>
+
+    <div class="usuario">
+      Impressão Comercial
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <div class="recibo" id="recibo">
+
+        <h2>🍺 Boteco 934</h2>
+
+        <hr>
+
+        <p>
+          Mesa: 01
+        </p>
+
+        <p>
+          Cliente: João Silva
+        </p>
+
+        <p>
+          Data:
+          <span id="dataAtual"></span>
+        </p>
+
+        <hr>
+
+        <p>
+          Heineken .......... R$ 12
+        </p>
+
+        <p>
+          Espetinho ......... R$ 15
+        </p>
+
+        <p>
+          Refrigerante ...... R$ 6
+        </p>
+
+        <hr>
+
+        <h3>
+          Total: R$ 33,00
+        </h3>
+
+        <hr>
+
+        <p>
+          ✔ Obrigado pela preferência
+        </p>
+
+      </div>
+
+      <br>
+
+      <button
+        class="produto"
+        onclick="imprimirRecibo()"
+      >
+
+        🖨️ Imprimir
+
+      </button>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    document
+      .getElementById("dataAtual")
+      .innerHTML =
+      new Date().toLocaleString();
+
+    function imprimirRecibo(){
+
+      window.print();
+
+    }
+
+  </script>
+
+</body>
+
+</html>
