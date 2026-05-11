@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Relatório Diário</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📊 Relatório Diário
+    </div>
+
+    <div class="usuario">
+      Gestão Comercial
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Resumo do Dia</h2>
+
+      <br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Indicador</th>
+            <th>Valor</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr>
+
+            <td>Total de Vendas</td>
+            <td id="totalVendas">
+              R$ 0,00
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>Total Financeiro</td>
+            <td id="saldoFinanceiro">
+              R$ 0,00
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>Mesas Abertas</td>
+            <td id="mesasAbertas">
+              0
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>Produtos Estoque</td>
+            <td id="produtosEstoque">
+              0
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+      <br>
+
+      <div class="status">
+
+        ✔ Relatório gerado automaticamente
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let vendas =
+      JSON.parse(
+        localStorage.getItem("historicoVendas")
+      ) || [];
+
+    let financeiro =
+      JSON.parse(
+        localStorage.getItem("financeiro")
+      ) || [];
+
+    let mesas =
+      JSON.parse(
+        localStorage.getItem("mesasAbertas")
+      ) || [];
+
+    let estoque =
+      JSON.parse(
+        localStorage.getItem("estoqueProdutos")
+      ) || [];
+
+    let totalVendas = 0;
+
+    vendas.forEach((venda) => {
+
+      totalVendas +=
+        Number(venda.total);
+
+    });
+
+    document
+      .getElementById("totalVendas")
+      .innerHTML =
+      `R$ ${totalVendas},00`;
+
+    let saldo = 0;
+
+    financeiro.forEach((movimento) => {
+
+      if(
+        movimento.tipo == "entrada"
+      ){
+
+        saldo +=
+          Number(movimento.valor);
+
+      } else {
+
+        saldo -=
+          Number(movimento.valor);
+
+      }
+
+    });
+
+    document
+      .getElementById("saldoFinanceiro")
+      .innerHTML =
+      `R$ ${saldo},00`;
+
+    document
+      .getElementById("mesasAbertas")
+      .innerHTML =
+      mesas.length;
+
+    document
+      .getElementById("produtosEstoque")
+      .innerHTML =
+      estoque.length;
+
+  </script>
+
+</body>
+
+</html>
