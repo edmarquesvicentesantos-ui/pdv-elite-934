@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Financeiro PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      💵 Financeiro PDV Elite 934
+    </div>
+
+    <div class="usuario">
+      Controle Financeiro
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Controle Financeiro</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="descricao"
+        placeholder="Descrição"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        id="valor"
+        placeholder="Valor"
+        class="campo"
+      >
+
+      <br><br>
+
+      <select
+        id="tipo"
+        class="campo"
+      >
+
+        <option value="entrada">
+          Entrada
+        </option>
+
+        <option value="saida">
+          Saída
+        </option>
+
+      </select>
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="salvarMovimento()"
+      >
+
+        💾 Salvar Movimento
+
+      </button>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Descrição</th>
+            <th>Valor</th>
+            <th>Tipo</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="tabelaFinanceiro">
+
+        </tbody>
+
+      </table>
+
+      <br>
+
+      <div class="total">
+
+        Saldo Atual:
+        <span id="saldo">
+          R$ 0,00
+        </span>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let financeiro =
+      JSON.parse(
+        localStorage.getItem("financeiro")
+      ) || [];
+
+    function carregarFinanceiro(){
+
+      let tabela =
+        document.getElementById(
+          "tabelaFinanceiro"
+        );
+
+      tabela.innerHTML = "";
+
+      let saldo = 0;
+
+      financeiro.forEach((movimento) => {
+
+        let linha =
+          document.createElement("tr");
+
+        linha.innerHTML = `
+
+          <td>${movimento.descricao}</td>
+          <td>R$ ${movimento.valor}</td>
+          <td>${movimento.tipo}</td>
+
+        `;
+
+        tabela.appendChild(linha);
+
+        if(movimento.tipo == "entrada"){
+
+          saldo += Number(
+            movimento.valor
+          );
+
+        } else {
+
+          saldo -= Number(
+            movimento.valor
+          );
+
+        }
+
+      });
+
+      document
+        .getElementById("saldo")
+        .innerHTML =
+        `R$ ${saldo},00`;
+
+    }
+
+    function salvarMovimento(){
+
+      let descricao =
+        document.getElementById(
+          "descricao"
+        ).value;
+
+      let valor =
+        document.getElementById(
+          "valor"
+        ).value;
+
+      let tipo =
+        document.getElementById(
+          "tipo"
+        ).value;
+
+      financeiro.push({
+
+        descricao: descricao,
+        valor: valor,
+        tipo: tipo
+
+      });
+
+      localStorage.setItem(
+        "financeiro",
+        JSON.stringify(financeiro)
+      );
+
+      carregarFinanceiro();
+
+      document.getElementById(
+        "descricao"
+      ).value = "";
+
+      document.getElementById(
+        "valor"
+      ).value = "";
+
+    }
+
+    carregarFinanceiro();
+
+  </script>
+
+</body>
+
+</html>
