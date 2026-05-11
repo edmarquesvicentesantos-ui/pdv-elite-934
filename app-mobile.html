@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>App Mobile PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <meta name="theme-color" content="#000000">
+
+  <link rel="manifest" href="manifest.json">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📱 App Mobile
+    </div>
+
+    <div class="usuario">
+      PDV Mobile
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Aplicativo Instalável</h2>
+
+      <br>
+
+      <div class="mesa-info">
+
+        ✔ Sistema compatível Android
+
+        <br><br>
+
+        ✔ Sistema compatível iPhone
+
+        <br><br>
+
+        ✔ Instalação rápida
+
+        <br><br>
+
+        ✔ Funciona tela cheia
+
+      </div>
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="instalarApp()"
+      >
+
+        📲 Instalar Aplicativo
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function instalarApp(){
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            📱 Para instalar:
+
+            <br><br>
+
+            Android:
+            Menu → Instalar App
+
+            <br><br>
+
+            iPhone:
+            Compartilhar → Adicionar à Tela Inicial
+
+          </div>
+
+        `;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
