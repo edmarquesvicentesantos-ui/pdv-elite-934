@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Usuários PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      👥 Usuários do Sistema
+    </div>
+
+    <div class="usuario">
+      Administração
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Cadastro de Usuários</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="nomeUsuario"
+        placeholder="Nome do Usuário"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="password"
+        id="senhaUsuario"
+        placeholder="Senha"
+        class="campo"
+      >
+
+      <br><br>
+
+      <select
+        id="nivelUsuario"
+        class="campo"
+      >
+
+        <option value="Administrador">
+          Administrador
+        </option>
+
+        <option value="Caixa">
+          Caixa
+        </option>
+
+        <option value="Garçom">
+          Garçom
+        </option>
+
+      </select>
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="salvarUsuario()"
+      >
+
+        💾 Salvar Usuário
+
+      </button>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Usuário</th>
+            <th>Nível</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="tabelaUsuarios">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let usuarios =
+      JSON.parse(
+        localStorage.getItem("usuariosSistema")
+      ) || [];
+
+    function carregarUsuarios(){
+
+      let tabela =
+        document.getElementById(
+          "tabelaUsuarios"
+        );
+
+      tabela.innerHTML = "";
+
+      usuarios.forEach((usuario) => {
+
+        let linha =
+          document.createElement("tr");
+
+        linha.innerHTML = `
+
+          <td>${usuario.nome}</td>
+          <td>${usuario.nivel}</td>
+          <td>✔ Ativo</td>
+
+        `;
+
+        tabela.appendChild(linha);
+
+      });
+
+    }
+
+    function salvarUsuario(){
+
+      let nome =
+        document.getElementById(
+          "nomeUsuario"
+        ).value;
+
+      let senha =
+        document.getElementById(
+          "senhaUsuario"
+        ).value;
+
+      let nivel =
+        document.getElementById(
+          "nivelUsuario"
+        ).value;
+
+      usuarios.push({
+
+        nome: nome,
+        senha: senha,
+        nivel: nivel
+
+      });
+
+      localStorage.setItem(
+        "usuariosSistema",
+        JSON.stringify(usuarios)
+      );
+
+      carregarUsuarios();
+
+      document.getElementById(
+        "nomeUsuario"
+      ).value = "";
+
+      document.getElementById(
+        "senhaUsuario"
+      ).value = "";
+
+    }
+
+    carregarUsuarios();
+
+  </script>
+
+</body>
+
+</html>
