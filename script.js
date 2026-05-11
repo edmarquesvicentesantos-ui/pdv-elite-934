@@ -23,3 +23,9 @@ function validarFechamento(){
 document
   .querySelector(".fechar")
   .addEventListener("click", validarFechamento);
+
+function voltar(){
+
+  window.location.href = "./index.html";
+
+}
