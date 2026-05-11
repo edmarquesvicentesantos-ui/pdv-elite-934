@@ -173,7 +173,71 @@
       historico.appendChild(linha);
 
     }
+<script>
 
+let total = 69;
+
+let itensMesa = [];
+
+function abrirPagina(pagina){
+
+  window.location.href = pagina;
+
+}
+
+function adicionarProduto(nome, valor){
+
+  let tabela =
+    document.getElementById("itensMesa");
+
+  let linha =
+    document.createElement("tr");
+
+  linha.innerHTML = `
+
+    <td>${nome}</td>
+    <td>1</td>
+    <td>R$ ${valor},00</td>
+
+  `;
+
+  tabela.appendChild(linha);
+
+  total += valor;
+
+  document
+    .getElementById("totalMesa")
+    .innerHTML =
+    `Total: R$ ${total},00`;
+
+  itensMesa.push({
+
+    nome: nome,
+    qtd: 1,
+    total: valor
+
+  });
+
+}
+
+function irCaixa(){
+
+  localStorage.setItem(
+    "totalMesa",
+    total
+  );
+
+  localStorage.setItem(
+    "itensMesa",
+    JSON.stringify(itensMesa)
+  );
+
+  window.location.href =
+  "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/caixa.html";
+
+}
+
+</script>
   </script>
 
 </body>
