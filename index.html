@@ -8,7 +8,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-  <title>Caixa PDV</title>
+  <title>Caixa PDV Elite 934</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -47,9 +47,11 @@
       <div class="mesa-info">
 
         <strong>Mesa:</strong> 01
+
         <br>
 
         <strong>Cliente:</strong> João Silva
+
         <br>
 
         <strong>Total:</strong>
@@ -66,36 +68,61 @@
 
       <br>
 
-      <button
-        class="produto"
-        onclick="pagar('Dinheiro')"
-      >
+      <div class="grid-produtos">
 
-        💵 Dinheiro
+        <button
+          class="produto"
+          onclick="pagar('Dinheiro')"
+        >
 
-      </button>
+          💵 Dinheiro
 
-      <button
-        class="produto"
-        onclick="pagar('PIX')"
-      >
+        </button>
 
-        📱 PIX
+        <button
+          class="produto"
+          onclick="pagar('PIX')"
+        >
 
-      </button>
+          📱 PIX
 
-      <button
-        class="produto"
-        onclick="pagar('Cartão')"
-      >
+        </button>
 
-        💳 Cartão
+        <button
+          class="produto"
+          onclick="pagar('Cartão')"
+        >
 
-      </button>
+          💳 Cartão
+
+        </button>
+
+      </div>
 
       <br><br>
 
       <div id="resultado"></div>
+
+      <br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Pagamento</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="historico">
+
+        </tbody>
+
+      </table>
 
     </div>
 
@@ -126,6 +153,21 @@
           </div>
 
         `;
+
+      let historico =
+        document.getElementById("historico");
+
+      let linha =
+        document.createElement("tr");
+
+      linha.innerHTML = `
+
+        <td>${tipo}</td>
+        <td>Pago</td>
+
+      `;
+
+      historico.appendChild(linha);
 
     }
 
