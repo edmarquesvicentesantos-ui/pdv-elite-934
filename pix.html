@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>PIX PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📱 PIX PDV Elite 934
+    </div>
+
+    <div class="usuario">
+      Pagamento Instantâneo
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Gerar Cobrança PIX</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="nomeCliente"
+        placeholder="Nome Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        id="valorPix"
+        placeholder="Valor"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="gerarPix()"
+      >
+
+        📱 Gerar PIX
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function gerarPix(){
+
+      let cliente =
+        document.getElementById(
+          "nomeCliente"
+        ).value;
+
+      let valor =
+        document.getElementById(
+          "valorPix"
+        ).value;
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="mesa-info">
+
+            <h2>📱 PIX Gerado</h2>
+
+            <strong>Cliente:</strong>
+            ${cliente}
+
+            <br>
+
+            <strong>Valor:</strong>
+            R$ ${valor},00
+
+            <br><br>
+
+            <img
+              src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PIX-${valor}"
+              width="200"
+            >
+
+            <br><br>
+
+            ✔ QR Code Gerado
+
+          </div>
+
+        `;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
