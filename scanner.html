@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Scanner PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      📷 Scanner de Produtos
+    </div>
+
+    <div class="usuario">
+      Caixa Inteligente
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Leitor de Código</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="codigo"
+        placeholder="Digite ou bipar código"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="buscarProduto()"
+      >
+
+        🔍 Buscar Produto
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function buscarProduto(){
+
+      let codigo =
+        document.getElementById(
+          "codigo"
+        ).value;
+
+      let resultado =
+        document.getElementById(
+          "resultado"
+        );
+
+      if(codigo == "789123"){
+
+        resultado.innerHTML = `
+
+          <div class="mesa-info">
+
+            <h2>🍺 Heineken</h2>
+
+            <strong>Preço:</strong>
+            R$ 12,00
+
+            <br>
+
+            <strong>Status:</strong>
+            Produto Encontrado
+
+          </div>
+
+        `;
+
+      } else {
+
+        resultado.innerHTML = `
+
+          <div class="status">
+
+            ❌ Produto não encontrado
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+  </script>
+
+</body>
+
+</html>
