@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Caixa PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      💰 Caixa PDV Elite 934
+    </div>
+
+    <div class="usuario">
+      Operador: Edmarques
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Fechamento da Conta</h2>
+
+      <br>
+
+      <div class="mesa-info">
+
+        <strong>Mesa:</strong>
+
+        <span id="mesaNumero">
+          01
+        </span>
+
+        <br>
+
+        <strong>Cliente:</strong>
+
+        <span id="clienteNome">
+          João Silva
+        </span>
+
+        <br>
+
+        <strong>Total:</strong>
+
+        <span id="valorTotal">
+          R$ 0,00
+        </span>
+
+      </div>
+
+      <br>
+
+      <h3>Itens Consumidos</h3>
+
+      <br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Total</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="itensMesa">
+
+        </tbody>
+
+      </table>
+
+      <br>
+
+      <h3>Forma de Pagamento</h3>
+
+      <br>
+
+      <div class="grid-produtos">
+
+        <button
+          class="produto"
+          onclick="pagar('Dinheiro')"
+        >
+
+          💵 Dinheiro
+
+        </button>
+
+        <button
+          class="produto"
+          onclick="pagar('PIX')"
+        >
+
+          📱 PIX
+
+        </button>
+
+        <button
+          class="produto"
+          onclick="pagar('Cartão')"
+        >
+
+          💳 Cartão
+
+        </button>
+
+      </div>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/index.html";
+
+    }
+
+    let total = localStorage.getItem("totalMesa");
+
+    let itens =
+      JSON.parse(
+        localStorage.getItem("itensMesa")
+      ) || [];
+
+    if(total){
+
+      document
+        .getElementById("valorTotal")
+        .innerHTML =
+        `R$ ${total},00`;
+
+    }
+
+    let tabela =
+      document.getElementById("itensMesa");
+
+    itens.forEach((item) => {
+
+      let linha =
+        document.createElement("tr");
+
+      linha.innerHTML = `
+
+        <td>${item.nome}</td>
+        <td>${item.qtd}</td>
+        <td>R$ ${item.total},00</td>
+
+      `;
+
+      tabela.appendChild(linha);
+
+    });
+
+    function pagar(tipo){
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            ✔ Pagamento realizado via ${tipo}
+
+            <br><br>
+
+            ✔ Mesa fechada com sucesso
+
+          </div>
+
+        `;
+
+      localStorage.removeItem("itensMesa");
+
+      localStorage.removeItem("totalMesa");
+
+    }
+
+  </script>
+
+</body>
+
+</html>
