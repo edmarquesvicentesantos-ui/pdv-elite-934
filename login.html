@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Login PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="comanda">
+
+      <h1>
+        🔐 Login PDV Elite 934
+      </h1>
+
+      <br>
+
+      <input
+        type="text"
+        id="usuario"
+        placeholder="Usuário"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="password"
+        id="senha"
+        placeholder="Senha"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="entrar()"
+      >
+
+        🚀 Entrar
+
+      </button>
+
+      <br><br>
+
+      <div id="mensagem"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function entrar(){
+
+      let usuario =
+        document.getElementById("usuario").value;
+
+      let senha =
+        document.getElementById("senha").value;
+
+      if(
+        usuario === "admin"
+        &&
+        senha === "123"
+      ){
+
+        document
+          .getElementById("mensagem")
+          .innerHTML = `
+
+            <div class="status">
+
+              ✔ Login realizado
+
+            </div>
+
+          `;
+
+        setTimeout(() => {
+
+          window.location.href =
+          "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/index.html";
+
+        }, 1000);
+
+      } else {
+
+        document
+          .getElementById("mensagem")
+          .innerHTML = `
+
+            <div class="status">
+
+              ❌ Usuário ou senha inválidos
+
+            </div>
+
+          `;
+
+      }
+
+    }
+
+  </script>
+
+</body>
+
+</html>
