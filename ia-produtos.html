@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>IA Produtos PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    img{
+
+      max-width: 200px;
+
+      border-radius: 10px;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🤖 IA Produtos
+    </div>
+
+    <div class="usuario">
+      Busca Inteligente
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Busca Inteligente Produto</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="codigoProduto"
+        placeholder="Digite código produto"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="buscarProdutoIA()"
+      >
+
+        🤖 Buscar Produto
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function buscarProdutoIA(){
+
+      let codigo =
+        document.getElementById(
+          "codigoProduto"
+        ).value;
+
+      let resultado =
+        document.getElementById(
+          "resultado"
+        );
+
+      if(codigo == "789123"){
+
+        resultado.innerHTML = `
+
+          <div class="mesa-info">
+
+            <h2>🍺 Heineken Long Neck</h2>
+
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/0/08/Heineken_beer.jpg"
+            >
+
+            <br><br>
+
+            <strong>Preço:</strong>
+            R$ 12,00
+
+            <br>
+
+            <strong>Status:</strong>
+            Produto encontrado pela IA
+
+          </div>
+
+        `;
+
+      } else {
+
+        resultado.innerHTML = `
+
+          <div class="status">
+
+            ❌ Produto não encontrado
+
+          </div>
+
+        `;
+
+      }
+
+    }
+
+  </script>
+
+</body>
+
+</html>
