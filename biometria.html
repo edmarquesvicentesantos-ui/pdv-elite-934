@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Biometria PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+
+    video{
+
+      width: 100%;
+
+      max-width: 500px;
+
+      border-radius: 15px;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🔐 Biometria Facial
+    </div>
+
+    <div class="usuario">
+      Segurança Sistema
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Reconhecimento Facial</h2>
+
+      <br>
+
+      <video
+        id="camera"
+        autoplay
+      ></video>
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="capturar()"
+      >
+
+        📸 Capturar
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    async function iniciarCamera(){
+
+      let video =
+        document.getElementById(
+          "camera"
+        );
+
+      let stream =
+        await navigator
+        .mediaDevices
+        .getUserMedia({
+
+          video: true
+
+        });
+
+      video.srcObject = stream;
+
+    }
+
+    function capturar(){
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            ✔ Face capturada com sucesso
+
+          </div>
+
+        `;
+
+    }
+
+    iniciarCamera();
+
+  </script>
+
+</body>
+
+</html>
