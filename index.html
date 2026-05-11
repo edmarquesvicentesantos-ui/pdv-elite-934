@@ -46,21 +46,55 @@
 
       <div class="mesa-info">
 
-        <strong>Mesa:</strong> 01
+        <strong>Mesa:</strong>
+
+        <span id="mesaNumero">
+          01
+        </span>
 
         <br>
 
-        <strong>Cliente:</strong> João Silva
+        <strong>Cliente:</strong>
+
+        <span id="clienteNome">
+          João Silva
+        </span>
 
         <br>
 
         <strong>Total:</strong>
 
         <span id="valorTotal">
-          R$ 121,00
+          R$ 0,00
         </span>
 
       </div>
+
+      <br>
+
+      <h3>Itens Consumidos</h3>
+
+      <br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Total</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="itensMesa">
+
+        </tbody>
+
+      </table>
 
       <br>
 
@@ -101,31 +135,7 @@
 
       <br><br>
 
-      <button onclick="abrirPagina('dashboard.html')">
-  📊 Dashboard
-</button>
       <div id="resultado"></div>
-
-      <br>
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Pagamento</th>
-            <th>Status</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody id="historico">
-
-        </tbody>
-
-      </table>
 
     </div>
 
@@ -135,9 +145,47 @@
 
     function voltar(){
 
-      window.location.href = "index.html";
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
 
     }
+
+    let total =
+      localStorage.getItem("totalMesa");
+
+    let itens =
+      JSON.parse(
+        localStorage.getItem("itensMesa")
+      ) || [];
+
+    if(total){
+
+      document
+        .getElementById("valorTotal")
+        .innerHTML =
+        `R$ ${total},00`;
+
+    }
+
+    let tabela =
+      document.getElementById("itensMesa");
+
+    itens.forEach((item) => {
+
+      let linha =
+        document.createElement("tr");
+
+      linha.innerHTML = `
+
+        <td>${item.nome}</td>
+        <td>${item.qtd}</td>
+        <td>R$ ${item.total},00</td>
+
+      `;
+
+      tabela.appendChild(linha);
+
+    });
 
     function pagar(tipo){
 
@@ -157,87 +205,12 @@
 
         `;
 
-      let historico =
-        document.getElementById("historico");
+      localStorage.removeItem("itensMesa");
 
-      let linha =
-        document.createElement("tr");
-
-      linha.innerHTML = `
-
-        <td>${tipo}</td>
-        <td>Pago</td>
-
-      `;
-
-      historico.appendChild(linha);
+      localStorage.removeItem("totalMesa");
 
     }
-<script>
 
-let total = 69;
-
-let itensMesa = [];
-
-function abrirPagina(pagina){
-
-  window.location.href = pagina;
-
-}
-
-function adicionarProduto(nome, valor){
-
-  let tabela =
-    document.getElementById("itensMesa");
-
-  let linha =
-    document.createElement("tr");
-
-  linha.innerHTML = `
-
-    <td>${nome}</td>
-    <td>1</td>
-    <td>R$ ${valor},00</td>
-
-  `;
-
-  tabela.appendChild(linha);
-
-  total += valor;
-
-  document
-    .getElementById("totalMesa")
-    .innerHTML =
-    `Total: R$ ${total},00`;
-
-  itensMesa.push({
-
-    nome: nome,
-    qtd: 1,
-    total: valor
-
-  });
-
-}
-
-function irCaixa(){
-
-  localStorage.setItem(
-    "totalMesa",
-    total
-  );
-
-  localStorage.setItem(
-    "itensMesa",
-    JSON.stringify(itensMesa)
-  );
-
-  window.location.href =
-  "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/caixa.html";
-
-}
-
-</script>
   </script>
 
 </body>
