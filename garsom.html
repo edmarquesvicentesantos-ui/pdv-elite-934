@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Garçom PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🍽️ Área do Garçom
+    </div>
+
+    <div class="usuario">
+      Atendimento
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Abertura de Mesa</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="numeroMesa"
+        placeholder="Número da Mesa"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="text"
+        id="nomeCliente"
+        placeholder="Nome do Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="text"
+        id="nomeGarcom"
+        placeholder="Nome do Garçom"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="abrirMesa()"
+      >
+
+        🍺 Abrir Mesa
+
+      </button>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Mesa</th>
+            <th>Cliente</th>
+            <th>Garçom</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="listaMesas">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let mesas =
+      JSON.parse(
+        localStorage.getItem("mesasAbertas")
+      ) || [];
+
+    function carregarMesas(){
+
+      let tabela =
+        document.getElementById("listaMesas");
+
+      tabela.innerHTML = "";
+
+      mesas.forEach((mesa) => {
+
+        let linha =
+          document.createElement("tr");
+
+        linha.innerHTML = `
+
+          <td>${mesa.numero}</td>
+          <td>${mesa.cliente}</td>
+          <td>${mesa.garcom}</td>
+          <td>🍺 Aberta</td>
+
+        `;
+
+        tabela.appendChild(linha);
+
+      });
+
+    }
+
+    function abrirMesa(){
+
+      let numero =
+        document.getElementById(
+          "numeroMesa"
+        ).value;
+
+      let cliente =
+        document.getElementById(
+          "nomeCliente"
+        ).value;
+
+      let garcom =
+        document.getElementById(
+          "nomeGarcom"
+        ).value;
+
+      mesas.push({
+
+        numero: numero,
+        cliente: cliente,
+        garcom: garcom
+
+      });
+
+      localStorage.setItem(
+        "mesasAbertas",
+        JSON.stringify(mesas)
+      );
+
+      carregarMesas();
+
+      document.getElementById(
+        "numeroMesa"
+      ).value = "";
+
+      document.getElementById(
+        "nomeCliente"
+      ).value = "";
+
+      document.getElementById(
+        "nomeGarcom"
+      ).value = "";
+
+    }
+
+    carregarMesas();
+
+  </script>
+
+</body>
+
+</html>
