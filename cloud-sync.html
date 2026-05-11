@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Cloud Sync PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      ☁️ Cloud Sync
+    </div>
+
+    <div class="usuario">
+      Sincronização Online
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Sincronização em Nuvem</h2>
+
+      <br>
+
+      <button
+        class="produto"
+        onclick="sincronizar()"
+      >
+
+        ☁️ Sincronizar Agora
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Módulo</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          <tr>
+
+            <td>Vendas</td>
+            <td>✔ Online</td>
+
+          </tr>
+
+          <tr>
+
+            <td>Estoque</td>
+            <td>✔ Online</td>
+
+          </tr>
+
+          <tr>
+
+            <td>Clientes</td>
+            <td>✔ Online</td>
+
+          </tr>
+
+          <tr>
+
+            <td>Financeiro</td>
+            <td>✔ Online</td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function sincronizar(){
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            ☁️ Sincronização realizada com sucesso
+
+            <br><br>
+
+            ✔ Sistema conectado à nuvem
+
+          </div>
+
+        `;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
