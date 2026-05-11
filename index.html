@@ -8,7 +8,7 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0">
 
-  <title>Caixa PDV Elite 934</title>
+  <title>PDV Elite 934</title>
 
   <link rel="stylesheet" href="style.css">
 
@@ -19,19 +19,51 @@
   <header>
 
     <div class="logo">
-      💰 Caixa PDV Elite 934
+      🍺 PDV Elite 934
     </div>
 
     <div class="usuario">
-      Operador: Edmarques
+      Operador: Edmarques | Caixa 01
     </div>
 
   </header>
 
   <nav>
 
-    <button onclick="voltar()">
-      ⬅ Voltar
+    <button onclick="abrirPagina('clientes.html')">
+      👥 Clientes
+    </button>
+
+    <button onclick="abrirPagina('dashboard.html')">
+      📊 Dashboard
+    </button>
+
+    <button onclick="abrirPagina('caixa.html')">
+      💰 Caixa
+    </button>
+
+    <button onclick="abrirPagina('financeiro.html')">
+      💵 Financeiro
+    </button>
+
+    <button onclick="abrirPagina('mesas.html')">
+      🍽️ Mesas
+    </button>
+
+    <button onclick="abrirPagina('estoque.html')">
+      📦 Estoque
+    </button>
+
+    <button onclick="abrirPagina('xml.html')">
+      📄 XML
+    </button>
+
+    <button onclick="abrirPagina('relatorios.html')">
+      📊 Relatórios
+    </button>
+
+    <button onclick="abrirPagina('configuracoes.html')">
+      ⚙️ Configurações
     </button>
 
   </nav>
@@ -40,41 +72,92 @@
 
     <div class="produtos">
 
-      <h2>Fechamento da Conta</h2>
+      <h2>Produtos</h2>
 
-      <br>
+      <div class="grid-produtos">
 
-      <div class="mesa-info">
+        <button
+          class="produto"
+          onclick="adicionarProduto('Amstel', 10)"
+        >
+          🍺 Amstel
+        </button>
 
-        <strong>Mesa:</strong>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Heineken', 12)"
+        >
+          🍺 Heineken
+        </button>
 
-        <span id="mesaNumero">
-          01
-        </span>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Skol', 8)"
+        >
+          🍺 Skol
+        </button>
 
-        <br>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Refrigerante', 6)"
+        >
+          🥤 Refrigerante
+        </button>
 
-        <strong>Cliente:</strong>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Água', 4)"
+        >
+          💧 Água
+        </button>
 
-        <span id="clienteNome">
-          João Silva
-        </span>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Whisky', 25)"
+        >
+          🥃 Whisky
+        </button>
 
-        <br>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Porção', 35)"
+        >
+          🍟 Porção
+        </button>
 
-        <strong>Total:</strong>
-
-        <span id="valorTotal">
-          R$ 0,00
-        </span>
+        <button
+          class="produto"
+          onclick="adicionarProduto('Espetinho', 15)"
+        >
+          🍢 Espetinho
+        </button>
 
       </div>
 
-      <br>
+    </div>
 
-      <h3>Itens Consumidos</h3>
+    <div class="comanda">
 
-      <br>
+      <h2>
+        🍽️ Mesa 01
+      </h2>
+
+      <div class="mesa-info">
+
+        <strong>Cliente:</strong>
+        João Silva
+
+        <br>
+
+        <strong>Garçom:</strong>
+        Carlos
+
+        <br>
+
+        <strong>Status:</strong>
+        Mesa Aberta
+
+      </div>
 
       <table>
 
@@ -82,7 +165,7 @@
 
           <tr>
 
-            <th>Produto</th>
+            <th>Item</th>
             <th>Qtd</th>
             <th>Total</th>
 
@@ -96,46 +179,32 @@
 
       </table>
 
-      <br>
+      <div class="total" id="totalMesa">
+        Total: R$ 0,00
+      </div>
 
-      <h3>Forma de Pagamento</h3>
+      <div class="acoes">
 
-      <br>
+        <button class="abrir">
+          ➕ Abrir Mesa
+        </button>
 
-      <div class="grid-produtos">
-
-        <button
-          class="produto"
-          onclick="pagar('Dinheiro')"
-        >
-
-          💵 Dinheiro
-
+        <button class="dividir">
+          💳 Dividir Conta
         </button>
 
         <button
-          class="produto"
-          onclick="pagar('PIX')"
+          class="fechar"
+          onclick="irCaixa()"
         >
-
-          📱 PIX
-
-        </button>
-
-        <button
-          class="produto"
-          onclick="pagar('Cartão')"
-        >
-
-          💳 Cartão
-
+          💰 Ir para Caixa
         </button>
 
       </div>
 
-      <br><br>
-
-      <div id="resultado"></div>
+      <div class="status">
+        ✔ Mesa só poderá ser fechada após pagamento total.
+      </div>
 
     </div>
 
@@ -143,71 +212,86 @@
 
   <script>
 
-    function voltar(){
+    let total = 0;
 
-      window.location.href =
-      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+    let itensMesa = [];
 
-    }
+    function abrirPagina(pagina){
 
-    let total =
-      localStorage.getItem("totalMesa");
-
-    let itens =
-      JSON.parse(
-        localStorage.getItem("itensMesa")
-      ) || [];
-
-    if(total){
-
-      document
-        .getElementById("valorTotal")
-        .innerHTML =
-        `R$ ${total},00`;
+      window.location.href = pagina;
 
     }
 
-    let tabela =
-      document.getElementById("itensMesa");
+    function adicionarProduto(nome, valor){
 
-    itens.forEach((item) => {
+      let tabela =
+        document.getElementById("itensMesa");
 
-      let linha =
-        document.createElement("tr");
+      let itemExistente =
+        itensMesa.find(
+          item => item.nome === nome
+        );
 
-      linha.innerHTML = `
+      if(itemExistente){
 
-        <td>${item.nome}</td>
-        <td>${item.qtd}</td>
-        <td>R$ ${item.total},00</td>
+        itemExistente.qtd++;
 
-      `;
+        itemExistente.total += valor;
 
-      tabela.appendChild(linha);
+      } else {
 
-    });
+        itensMesa.push({
 
-    function pagar(tipo){
+          nome: nome,
+          qtd: 1,
+          total: valor
 
-      document
-        .getElementById("resultado")
-        .innerHTML = `
+        });
 
-          <div class="status">
+      }
 
-            ✔ Pagamento realizado via ${tipo}
+      tabela.innerHTML = "";
 
-            <br><br>
+      itensMesa.forEach((item) => {
 
-            ✔ Mesa fechada com sucesso
+        let linha =
+          document.createElement("tr");
 
-          </div>
+        linha.innerHTML = `
+
+          <td>${item.nome}</td>
+          <td>${item.qtd}</td>
+          <td>R$ ${item.total},00</td>
 
         `;
 
-      localStorage.removeItem("itensMesa");
+        tabela.appendChild(linha);
 
-      localStorage.removeItem("totalMesa");
+      });
+
+      total += valor;
+
+      document
+        .getElementById("totalMesa")
+        .innerHTML =
+        `Total: R$ ${total},00`;
+
+    }
+
+    function irCaixa(){
+
+      localStorage.setItem(
+        "totalMesa",
+        total
+      );
+
+      localStorage.setItem(
+        "itensMesa",
+        JSON.stringify(itensMesa)
+      );
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/caixa.html";
 
     }
 
