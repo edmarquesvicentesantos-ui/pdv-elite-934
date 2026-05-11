@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Fidelidade PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🎁 Clube Fidelidade
+    </div>
+
+    <div class="usuario">
+      Clientes VIP
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Pontuação Clientes</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="cliente"
+        placeholder="Nome Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        id="pontos"
+        placeholder="Pontos"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="salvarCliente()"
+      >
+
+        🎁 Salvar Pontos
+
+      </button>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Cliente</th>
+            <th>Pontos</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="listaClientes">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let clientes =
+      JSON.parse(
+        localStorage.getItem("clientesVip")
+      ) || [];
+
+    function carregarClientes(){
+
+      let tabela =
+        document.getElementById(
+          "listaClientes"
+        );
+
+      tabela.innerHTML = "";
+
+      clientes.forEach((cliente) => {
+
+        let status = "⭐ Cliente";
+
+        if(cliente.pontos >= 100){
+
+          status = "👑 VIP";
+
+        }
+
+        let linha =
+          document.createElement("tr");
+
+        linha.innerHTML = `
+
+          <td>${cliente.nome}</td>
+
+          <td>${cliente.pontos}</td>
+
+          <td>${status}</td>
+
+        `;
+
+        tabela.appendChild(linha);
+
+      });
+
+    }
+
+    function salvarCliente(){
+
+      let nome =
+        document.getElementById(
+          "cliente"
+        ).value;
+
+      let pontos =
+        Number(
+          document.getElementById(
+            "pontos"
+          ).value
+        );
+
+      clientes.push({
+
+        nome: nome,
+        pontos: pontos
+
+      });
+
+      localStorage.setItem(
+        "clientesVip",
+        JSON.stringify(clientes)
+      );
+
+      carregarClientes();
+
+      document.getElementById(
+        "cliente"
+      ).value = "";
+
+      document.getElementById(
+        "pontos"
+      ).value = "";
+
+    }
+
+    carregarClientes();
+
+  </script>
+
+</body>
+
+</html>
