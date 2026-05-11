@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>NF-e PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🧾 Emissão NF-e
+    </div>
+
+    <div class="usuario">
+      Fiscal
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Emitir Documento Fiscal</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="cliente"
+        placeholder="Nome Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="text"
+        id="cpf"
+        placeholder="CPF Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        id="valor"
+        placeholder="Valor Venda"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="emitirNota()"
+      >
+
+        🧾 Emitir NF-e
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function emitirNota(){
+
+      let cliente =
+        document.getElementById(
+          "cliente"
+        ).value;
+
+      let cpf =
+        document.getElementById(
+          "cpf"
+        ).value;
+
+      let valor =
+        document.getElementById(
+          "valor"
+        ).value;
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="mesa-info">
+
+            <h2>🧾 NF-e Emitida</h2>
+
+            <strong>Cliente:</strong>
+            ${cliente}
+
+            <br>
+
+            <strong>CPF:</strong>
+            ${cpf}
+
+            <br>
+
+            <strong>Valor:</strong>
+            R$ ${valor},00
+
+            <br><br>
+
+            ✔ Documento gerado com sucesso
+
+          </div>
+
+        `;
+
+    }
+
+  </script>
+
+</body>
+
+</html>
