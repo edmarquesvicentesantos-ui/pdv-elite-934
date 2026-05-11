@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Delivery PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      🛵 Delivery PDV Elite 934
+    </div>
+
+    <div class="usuario">
+      Entregas
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Novo Pedido Delivery</h2>
+
+      <br>
+
+      <input
+        type="text"
+        id="cliente"
+        placeholder="Nome Cliente"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="text"
+        id="endereco"
+        placeholder="Endereço"
+        class="campo"
+      >
+
+      <br><br>
+
+      <input
+        type="text"
+        id="pedido"
+        placeholder="Pedido"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="salvarPedido()"
+      >
+
+        🛵 Salvar Pedido
+
+      </button>
+
+      <br><br>
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Cliente</th>
+            <th>Endereço</th>
+            <th>Pedido</th>
+            <th>Status</th>
+
+          </tr>
+
+        </thead>
+
+        <tbody id="listaDelivery">
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    let entregas =
+      JSON.parse(
+        localStorage.getItem("deliveryPedidos")
+      ) || [];
+
+    function carregarPedidos(){
+
+      let tabela =
+        document.getElementById(
+          "listaDelivery"
+        );
+
+      tabela.innerHTML = "";
+
+      entregas.forEach((pedido) => {
+
+        let linha =
+          document.createElement("tr");
+
+        linha.innerHTML = `
+
+          <td>${pedido.cliente}</td>
+
+          <td>${pedido.endereco}</td>
+
+          <td>${pedido.pedido}</td>
+
+          <td>🛵 Em entrega</td>
+
+        `;
+
+        tabela.appendChild(linha);
+
+      });
+
+    }
+
+    function salvarPedido(){
+
+      let cliente =
+        document.getElementById(
+          "cliente"
+        ).value;
+
+      let endereco =
+        document.getElementById(
+          "endereco"
+        ).value;
+
+      let pedido =
+        document.getElementById(
+          "pedido"
+        ).value;
+
+      entregas.push({
+
+        cliente: cliente,
+        endereco: endereco,
+        pedido: pedido
+
+      });
+
+      localStorage.setItem(
+        "deliveryPedidos",
+        JSON.stringify(entregas)
+      );
+
+      carregarPedidos();
+
+      document.getElementById(
+        "cliente"
+      ).value = "";
+
+      document.getElementById(
+        "endereco"
+      ).value = "";
+
+      document.getElementById(
+        "pedido"
+      ).value = "";
+
+    }
+
+    carregarPedidos();
+
+  </script>
+
+</body>
+
+</html>
