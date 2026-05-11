@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>Backup PDV Elite 934</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <header>
+
+    <div class="logo">
+      ☁️ Backup do Sistema
+    </div>
+
+    <div class="usuario">
+      Segurança PDV
+    </div>
+
+  </header>
+
+  <nav>
+
+    <button onclick="voltar()">
+      ⬅ Voltar
+    </button>
+
+  </nav>
+
+  <div class="container">
+
+    <div class="produtos">
+
+      <h2>Gerenciamento de Backup</h2>
+
+      <br>
+
+      <button
+        class="produto"
+        onclick="exportarBackup()"
+      >
+
+        💾 Exportar Backup
+
+      </button>
+
+      <br><br>
+
+      <input
+        type="file"
+        id="arquivoBackup"
+        class="campo"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="restaurarBackup()"
+      >
+
+        ♻ Restaurar Backup
+
+      </button>
+
+      <br><br>
+
+      <div id="resultado"></div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function voltar(){
+
+      window.location.href =
+      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+
+    }
+
+    function exportarBackup(){
+
+      let dados = {
+
+        estoque:
+          localStorage.getItem(
+            "estoqueProdutos"
+          ),
+
+        vendas:
+          localStorage.getItem(
+            "historicoVendas"
+          ),
+
+        mesas:
+          localStorage.getItem(
+            "mesasAbertas"
+          )
+
+      };
+
+      let blob =
+        new Blob(
+          [JSON.stringify(dados)],
+          { type: "application/json" }
+        );
+
+      let link =
+        document.createElement("a");
+
+      link.href =
+        URL.createObjectURL(blob);
+
+      link.download =
+        "backup-pdv-elite.json";
+
+      link.click();
+
+      document
+        .getElementById("resultado")
+        .innerHTML = `
+
+          <div class="status">
+
+            ✔ Backup exportado com sucesso
+
+          </div>
+
+        `;
+
+    }
+
+    function restaurarBackup(){
+
+      let arquivo =
+        document.getElementById(
+          "arquivoBackup"
+        ).files[0];
+
+      if(!arquivo){
+
+        return;
+
+      }
+
+      let leitor =
+        new FileReader();
+
+      leitor.onload = function(e){
+
+        let dados =
+          JSON.parse(e.target.result);
+
+        localStorage.setItem(
+          "estoqueProdutos",
+          dados.estoque
+        );
+
+        localStorage.setItem(
+          "historicoVendas",
+          dados.vendas
+        );
+
+        localStorage.setItem(
+          "mesasAbertas",
+          dados.mesas
+        );
+
+        document
+          .getElementById("resultado")
+          .innerHTML = `
+
+            <div class="status">
+
+              ✔ Backup restaurado com sucesso
+
+            </div>
+
+          `;
+
+      };
+
+      leitor.readAsText(arquivo);
+
+    }
+
+  </script>
+
+</body>
+
+</html>
