@@ -150,9 +150,19 @@
 
     }
 
-    let total =
-      localStorage.getItem("totalMesa");
+    let cliente =
 
+  localStorage.getItem(
+    "clienteMesa"
+  );
+
+if(cliente){
+
+  document.getElementById(
+    "clienteNome"
+  ).innerHTML = cliente;
+
+}
     let itens =
       JSON.parse(
         localStorage.getItem("itensMesa")
