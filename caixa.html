@@ -242,6 +242,62 @@ localStorage.removeItem(
 );
 
 }
+  function pendurarConta(){
+
+  document
+    .getElementById("resultado")
+    .innerHTML = `
+
+      <div class="status">
+
+        📝 Conta pendurada
+        com sucesso
+
+      </div>
+
+    `;
+
+}
+
+function dividirConta(){
+
+  let pessoas = prompt(
+
+    "Dividir para quantas pessoas?"
+
+  );
+
+  if(!pessoas){
+
+    return;
+
+  }
+
+  let valorDividido =
+
+    (Number(total) / Number(pessoas))
+    .toFixed(2);
+
+  document
+    .getElementById("resultado")
+    .innerHTML = `
+
+      <div class="status">
+
+        👥 Conta dividida
+        para ${pessoas} pessoas
+
+        <br><br>
+
+        💰 Cada pessoa paga:
+
+        R$ ${valorDividido}
+
+      </div>
+
+    `;
+
+}
 
 </script>
 
