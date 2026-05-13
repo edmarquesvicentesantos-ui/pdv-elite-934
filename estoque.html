@@ -5,9 +5,15 @@
 
   <meta charset="UTF-8">
 
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
   <title>Estoque</title>
 
   <link rel="stylesheet" href="style.css">
+
+  <script type="module"
+          src="firebase-config.js"></script>
 
 </head>
 
@@ -37,83 +43,51 @@
 
       <br>
 
+      <input
+        type="text"
+        id="produto"
+        class="campo"
+        placeholder="Nome do Produto"
+      >
+
+      <br><br>
+
+      <input
+        type="number"
+        id="quantidade"
+        class="campo"
+        placeholder="Quantidade"
+      >
+
+      <br><br>
+
+      <button
+        class="produto"
+        onclick="salvarProduto()"
+      >
+
+        💾 Salvar Produto
+
+      </button>
+
+      <br><br>
+
       <table>
 
-        <tr>
+        <thead>
 
-          <th>Produto</th>
-          <th>Quantidade</th>
+          <tr>
 
-        </tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
 
-        <tr>
+          </tr>
 
-          <td>Heineken</td>
-          <td>24</td>
+        </thead>
 
-        </tr>
+        <tbody id="tabelaEstoque">
 
-        <tr>
-
-          <td>Baden Baden Lata</td>
-          <td>24</td>
-
-        </tr>
-
-        <tr>
-
-          <td>Spaten Long </td>
-          <td>24</td>
-
-        </tr>
-
-        <tr>
-
-          <td>Budweiser</td>
-          <td>24</td>
-
-        </tr>
-
-        <tr>
-
-          <td>Corona</td>
-          <td>24</td>
-
-        </tr>
-
-        <tr>
-
-          <td>Spaten Lata</td>
-          <td>24</td>
-
-        </tr>
-
-        <tr>
-
-          <td>Amstel</td>
-          <td>18</td>
-
-        </tr>
-
-        <tr>
-
-          <td>Brahma Litrinho</td>
-          <td>23</td>
-
-        </tr>
-    <tr>
-
-          <td>Devassa Litrinho</td>
-          <td>24</td>
-
-        </tr>
-  <tr>
-
-          <td>Skol Litrinho</td>
-          <td>23</td>
-
-        </tr>
-
+        </tbody>
 
       </table>
 
@@ -125,9 +99,94 @@
 
     function voltar(){
 
-      window.location.href = "index.html";
+      window.location.href =
+      "index.html";
 
     }
+
+    let estoque =
+      JSON.parse(
+        localStorage.getItem(
+          "estoqueProdutos"
+        )
+      ) || [];
+
+    function carregarEstoque(){
+
+      let tabela =
+        document.getElementById(
+          "tabelaEstoque"
+        );
+
+      tabela.innerHTML = "";
+
+      estoque.forEach((item) => {
+
+        let linha =
+          document.createElement("tr");
+
+        linha.innerHTML = `
+
+          <td>${item.produto}</td>
+          <td>${item.quantidade}</td>
+
+        `;
+
+        tabela.appendChild(linha);
+
+      });
+
+    }
+
+    function salvarProduto(){
+
+      let produto =
+        document.getElementById(
+          "produto"
+        ).value;
+
+      let quantidade =
+        document.getElementById(
+          "quantidade"
+        ).value;
+
+      if(
+        produto == "" ||
+        quantidade == ""
+      ){
+
+        return;
+
+      }
+
+      estoque.push({
+
+        produto: produto,
+        quantidade: quantidade
+
+      });
+
+      localStorage.setItem(
+
+        "estoqueProdutos",
+
+        JSON.stringify(estoque)
+
+      );
+
+      carregarEstoque();
+
+      document.getElementById(
+        "produto"
+      ).value = "";
+
+      document.getElementById(
+        "quantidade"
+      ).value = "";
+
+    }
+
+    carregarEstoque();
 
   </script>
 
