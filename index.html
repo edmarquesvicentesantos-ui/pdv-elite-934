@@ -91,7 +91,7 @@ onclick="adicionarProduto('Refrigerante',6)"
 
 <button
 class="produto"
-onclick="adicionarProduto('Porção',35)"
+onclick="pedirPorcao()"
 >
 
 🍟 Porção
@@ -345,6 +345,31 @@ salvarPedidoFirebase();
 
 window.location.href =
 "caixa.html";
+
+}
+```
+```javascript
+function pedirPorcao(){
+
+let sabor = prompt(
+
+"Qual porção?\n\nEx:\nCalabresa\nBatata\nFrango\nPicanha"
+
+);
+
+if(!sabor){
+
+return;
+
+}
+
+adicionarProduto(
+
+"Porção - " + sabor,
+
+35
+
+);
 
 }
 ```
