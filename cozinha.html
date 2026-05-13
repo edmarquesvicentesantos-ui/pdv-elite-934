@@ -1,163 +1,190 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-  <title>Cozinha PDV Elite 934</title>
+<title>Cozinha PDV</title>
 
-  <link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
 </head>
 
 <body>
 
-  <header>
+<header>
 
-    <div class="logo">
-      🍳 Painel Cozinha
-    </div>
+<div class="logo">
+🍳 Cozinha PDV Elite 934
+</div>
 
-    <div class="usuario">
-      Produção
-    </div>
+</header>
 
-  </header>
+<nav>
 
-  <nav>
+<button onclick="voltar()">
+⬅ Voltar
+</button>
 
-    <button onclick="voltar()">
-      ⬅ Voltar
-    </button>
+</nav>
 
-  </nav>
+<div class="container">
 
-  <div class="container">
+<div class="produtos">
 
-    <div class="produtos">
+<h2>
+📋 Pedidos da Cozinha
+</h2>
 
-      <h2>Pedidos em Produção</h2>
+<br>
 
-      <br>
+<div id="listaPedidos">
 
-      <table>
+</div>
 
-        <thead>
+</div>
 
-          <tr>
+</div>
 
-            <th>Mesa</th>
-            <th>Pedido</th>
-            <th>Status</th>
-            <th>Ação</th>
+<script>
 
-          </tr>
+function voltar(){
 
-        </thead>
+window.location.href =
+"index.html";
 
-        <tbody id="pedidosCozinha">
+}
 
-        </tbody>
+function carregarPedidos(){
 
-      </table>
+let pedidos =
 
-    </div>
+JSON.parse(
+localStorage.getItem(
+"itensMesa"
+)
+) || [];
 
-  </div>
+let cliente =
 
-  <script>
+localStorage.getItem(
+"clienteMesa"
+);
 
-    function voltar(){
+let lista =
 
-      window.location.href =
-      "https://edmarquesvicentesantos-ui.github.io/pdv-elite-934/";
+document.getElementById(
+"listaPedidos"
+);
 
-    }
+lista.innerHTML = "";
 
-    let pedidos =
-      JSON.parse(
-        localStorage.getItem("pedidosCozinha")
-      ) || [
+if(pedidos.length === 0){
 
-        {
-          mesa: "01",
-          pedido: "🍟 Porção Batata",
-          status: "Preparando"
-        },
+lista.innerHTML = `
 
-        {
-          mesa: "02",
-          pedido: "🍢 Espetinho",
-          status: "Fila"
-        }
+<div class="status">
 
-      ];
+🍳 Nenhum pedido na cozinha
 
-    function carregarPedidos(){
+</div>
 
-      let tabela =
-        document.getElementById(
-          "pedidosCozinha"
-        );
+`;
 
-      tabela.innerHTML = "";
+return;
 
-      pedidos.forEach((pedido, index) => {
+}
 
-        let linha =
-          document.createElement("tr");
+pedidos.forEach((item,index)=>{
 
-        linha.innerHTML = `
+let card =
+document.createElement("div");
 
-          <td>${pedido.mesa}</td>
+card.className =
+"mesa-info";
 
-          <td>${pedido.pedido}</td>
+card.innerHTML = `
 
-          <td>${pedido.status}</td>
+<h3>
+🍽️ ${cliente || "Cliente"}
+</h3>
 
-          <td>
+<br>
 
-            <button
-              class="produto"
-              onclick="finalizarPedido(${index})"
-            >
+<strong>
+Produto:
+</strong>
 
-              ✔ Finalizar
+${item.nome}
 
-            </button>
+<br><br>
 
-          </td>
+<strong>
+Quantidade:
+</strong>
 
-        `;
+${item.qtd}
 
-        tabela.appendChild(linha);
+<br><br>
 
-      });
+<button
+class="produto"
+onclick="finalizarItem(${index})"
+>
 
-    }
+✔ Finalizar
 
-    function finalizarPedido(index){
+</button>
 
-      pedidos[index].status =
-        "✔ Pronto";
+<hr>
 
-      localStorage.setItem(
-        "pedidosCozinha",
-        JSON.stringify(pedidos)
-      );
+`;
 
-      carregarPedidos();
+lista.appendChild(card);
 
-    }
+});
 
-    carregarPedidos();
+}
 
-  </script>
+function finalizarItem(index){
+
+let pedidos =
+
+JSON.parse(
+localStorage.getItem(
+"itensMesa"
+)
+) || [];
+
+pedidos.splice(index,1);
+
+localStorage.setItem(
+
+"itensMesa",
+
+JSON.stringify(pedidos)
+
+);
+
+carregarPedidos();
+
+}
+
+window.onload = function(){
+
+carregarPedidos();
+
+}
+
+</script>
 
 </body>
 
 </html>
+```
