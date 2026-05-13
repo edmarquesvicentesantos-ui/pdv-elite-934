@@ -187,56 +187,120 @@
 
     });
 
+    function baixarEstoque(){
+
+      let estoque =
+        JSON.parse(
+          localStorage.getItem(
+            "estoqueProdutos"
+          )
+        ) || [];
+
+      itens.forEach((itemVenda) => {
+
+        estoque.forEach((produto) => {
+
+          if(
+            produto.produto
+            ==
+            itemVenda.nome
+          ){
+
+            produto.quantidade =
+
+              Number(produto.quantidade)
+
+              -
+
+              Number(itemVenda.qtd);
+
+            if(
+              produto.quantidade < 0
+            ){
+
+              produto.quantidade = 0;
+
+            }
+
+          }
+
+        });
+
+      });
+
+      localStorage.setItem(
+
+        "estoqueProdutos",
+
+        JSON.stringify(estoque)
+
+      );
+
+    }
+
     function pagar(tipo){
 
-  document
-    .getElementById("resultado")
-    .innerHTML = `
+      baixarEstoque();
 
-      <div class="status">
+      document
+        .getElementById("resultado")
+        .innerHTML = `
 
-        ✔ Pagamento realizado via ${tipo}
+          <div class="status">
 
-        <br><br>
+            ✔ Pagamento realizado via ${tipo}
 
-        ✔ Mesa fechada com sucesso
+            <br><br>
 
-      </div>
+            ✔ Mesa fechada com sucesso
 
-    `;
+          </div>
 
-  let historico =
-    JSON.parse(
-      localStorage.getItem("historicoVendas")
-    ) || [];
+        `;
 
-  historico.push({
+      let historico =
+        JSON.parse(
+          localStorage.getItem(
+            "historicoVendas"
+          )
+        ) || [];
 
-    data:
-      new Date().toLocaleString(),
+      historico.push({
 
-    cliente:
-      document.getElementById("clienteNome")
-      .innerText,
+        data:
+          new Date().toLocaleString(),
 
-    total:
-      Number(total),
+        cliente:
+          document.getElementById(
+            "clienteNome"
+          ).innerText,
 
-    pagamento:
-      tipo
+        total:
+          Number(total),
 
-  });
+        pagamento:
+          tipo
 
-  localStorage.setItem(
-    "historicoVendas",
-    JSON.stringify(historico)
-  );
+      });
 
-  localStorage.removeItem("itensMesa");
+      localStorage.setItem(
 
-  localStorage.removeItem("totalMesa");
+        "historicoVendas",
 
-}
+        JSON.stringify(historico)
+
+      );
+
+      localStorage.removeItem(
+        "itensMesa"
+      );
+
+      localStorage.removeItem(
+        "totalMesa"
+      );
+
+    }
+
   </script>
 
 </body>
