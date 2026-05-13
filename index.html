@@ -1,364 +1,109 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
+```html
+<script>
 
-<head>
+let total = 0;
 
-  <meta charset="UTF-8">
+let itensMesa = [];
 
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1.0">
+function abrirPagina(pagina){
 
-  <title>PDV Elite 934</title>
+  window.location.href = pagina;
 
-  <link rel="stylesheet" href="style.css">
+}
 
-</head>
+function adicionarProduto(nome, valor){
 
-<body>
+  let tabela =
+    document.getElementById("itensMesa");
 
-  <header>
+  let itemExistente =
+    itensMesa.find(
+      item => item.nome === nome
+    );
 
-    <div class="logo">
-      🍺 PDV Elite 934
-    </div>
+  if(itemExistente){
 
-    <div class="usuario">
-      Operador: Edmarques | Caixa 01
-    </div>
+    itemExistente.qtd++;
 
-  </header>
+    itemExistente.total += valor;
 
-  <nav>
+  } else {
 
-    <button onclick="abrirPagina('clientes.html')">
-      👥 Clientes
-    </button>
+    itensMesa.push({
 
-    <button onclick="abrirPagina('mesas.html')">
-      🍽️ Mesas
-    </button>
+      nome: nome,
+      qtd: 1,
+      total: valor
 
-    <button onclick="abrirPagina('dashboard.html')">
-      📊 Dashboard
-    </button>
+    });
 
-    <button onclick="abrirPagina('ia-produtos.html')">
-      🤖 IA Produtos
-    </button>
+  }
 
-    <button onclick="abrirPagina('biometria.html')">
-      🔐 Biometria
-    </button>
+  tabela.innerHTML = "";
 
-    <button onclick="abrirPagina('caixa.html')">
-      💰 Caixa
-    </button>
+  itensMesa.forEach((item) => {
 
-    <button onclick="abrirPagina('whatsapp.html')">
-      📲 WhatsApp
-    </button>
+    let linha =
+      document.createElement("tr");
 
-    <button onclick="abrirPagina('delivery.html')">
-      🛵 Delivery
-    </button>
+    linha.innerHTML = `
 
-    <button onclick="abrirPagina('nfe.html')">
-      🧾 NF-e
-    </button>
+      <td>${item.nome}</td>
+      <td>${item.qtd}</td>
+      <td>R$ ${item.total},00</td>
 
-    <button onclick="abrirPagina('pix.html')">
-      📱 PIX
-    </button>
+    `;
 
-    <button onclick="abrirPagina('financeiro.html')">
-      💵 Financeiro
-    </button>
+    tabela.appendChild(linha);
 
-    <button onclick="abrirPagina('cozinha.html')">
-      🍳 Cozinha
-    </button>
+  });
 
-    <button onclick="abrirPagina('estoque.html')">
-      📦 Estoque
-    </button>
+  total += valor;
 
-    <button onclick="abrirPagina('cloud-sync.html')">
-      ☁️ Cloud Sync
-    </button>
+  document
+    .getElementById("totalMesa")
+    .innerHTML =
+    `Total: R$ ${total},00`;
 
-    <button onclick="abrirPagina('xml.html')">
-      📄 XML
-    </button>
+  localStorage.setItem(
+    "itensMesa",
+    JSON.stringify(itensMesa)
+  );
 
-    <button onclick="abrirPagina('scanner.html')">
-      📷 Scanner
-    </button>
+  localStorage.setItem(
+    "totalMesa",
+    total
+  );
 
-    <button onclick="abrirPagina('impressao.html')">
-      🖨️ Impressão
-    </button>
+  let clienteAtual =
 
-    <button onclick="abrirPagina('relatorios.html')">
-      📊 Relatórios
-    </button>
-
-    <button onclick="abrirPagina('app-mobile.html')">
-      📱 App Mobile
-    </button>
-
-    <button onclick="abrirPagina('fidelidade.html')">
-      🎁 Fidelidade
-    </button>
-
-    <button onclick="abrirPagina('relatorio-diario.html')">
-      📊 Relatório Diário
-    </button>
-
-    <button onclick="abrirPagina('historico.html')">
-      📋 Histórico
-    </button>
-
-    <button onclick="abrirPagina('dashboard-premium.html')">
-      📈 Dashboard Premium
-    </button>
-
-    <button onclick="abrirPagina('vendas.html')">
-      💰 Vendas
-    </button>
-
-    <button onclick="abrirPagina('garcom.html')">
-      🍽️ Garçom
-    </button>
-
-    <button onclick="abrirPagina('usuarios.html')">
-      👥 Usuários
-    </button>
-
-    <button onclick="abrirPagina('financeiro-real.html')">
-      💵 Financeiro Real
-    </button>
-
-    <button onclick="abrirPagina('configuracoes.html')">
-      ⚙️ Configurações
-    </button>
+    document.getElementById(
+      "cliente"
+    ).value;
 
-  </nav>
+  localStorage.setItem(
+    "clienteMesa",
+    clienteAtual
+  );
 
-  <div class="container">
+}
 
-    <div class="produtos">
+function salvarCliente(){
 
-      <h2>Produtos</h2>
+  let cliente =
 
-      <div class="grid-produtos">
+    document.getElementById(
+      "cliente"
+    ).value;
 
-        <button
-          class="produto"
-          onclick="adicionarProduto('Amstel', 10)"
-        >
-          🍺 Amstel
-        </button>
+  localStorage.setItem(
+    "clienteMesa",
+    cliente
+  );
 
-        <button
-          class="produto"
-          onclick="adicionarProduto('Heineken', 12)"
-        >
-          🍺 Heineken
-        </button>
+}
 
-        <button
-          class="produto"
-          onclick="adicionarProduto('Skol', 8)"
-        >
-          🍺 Skol
-        </button>
-
-        <button
-          class="produto"
-          onclick="adicionarProduto('Refrigerante', 6)"
-        >
-          🥤 Refrigerante
-        </button>
-
-        <button
-          class="produto"
-          onclick="adicionarProduto('Água', 4)"
-        >
-          💧 Água
-        </button>
-
-        <button
-          class="produto"
-          onclick="adicionarProduto('Whisky', 25)"
-        >
-          🥃 Whisky
-        </button>
-
-        <button
-          class="produto"
-          onclick="adicionarProduto('Porção', 35)"
-        >
-          🍟 Porção
-        </button>
-
-        <button
-          class="produto"
-          onclick="adicionarProduto('Espetinho', 15)"
-        >
-          🍢 Espetinho
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="comanda">
-
-      <h2>
-        🍽️ Mesa 01
-      </h2>
-
-      <div class="mesa-info">
-
-        <strong>Cliente:</strong>
-
-<input
-  type="text"
-  id="cliente"
-  class="campo"
-  placeholder="Nome do Cliente"
-/>
-
-        <br>
-
-        <strong>Garçom:</strong>
-        Carlos
-
-        <br>
-
-        <strong>Status:</strong>
-        Mesa Aberta
-
-      </div>
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>Item</th>
-            <th>Qtd</th>
-            <th>Total</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody id="itensMesa">
-
-        </tbody>
-
-      </table>
-
-      <div class="total" id="totalMesa">
-        Total: R$ 0,00
-      </div>
-
-      <div class="acoes">
-
-        <button class="dividir">
-          💳 Dividir Conta
-        </button>
-
-        <button
-          class="fechar"
-          onclick="irCaixa()"
-        >
-
-          💰 Abrir Caixa
-
-        </button>
-
-      </div>
-
-      <div class="status">
-        ✔ Mesa só poderá ser fechada após pagamento total.
-      </div>
-
-    </div>
-
-  </div>
-
-  <script>
-
-    let total = 0;
-
-    let itensMesa = [];
-
-    function abrirPagina(pagina){
-
-      window.location.href = pagina;
-
-    }
-
-    function adicionarProduto(nome, valor){
-
-      let tabela =
-        document.getElementById("itensMesa");
-
-      let itemExistente =
-        itensMesa.find(
-          item => item.nome === nome
-        );
-
-      if(itemExistente){
-
-        itemExistente.qtd++;
-
-        itemExistente.total += valor;
-
-      } else {
-
-        itensMesa.push({
-
-          nome: nome,
-          qtd: 1,
-          total: valor
-
-        });
-
-      }
-
-      tabela.innerHTML = "";
-
-      itensMesa.forEach((item) => {
-
-        let linha =
-          document.createElement("tr");
-
-        linha.innerHTML = `
-
-          <td>${item.nome}</td>
-          <td>${item.qtd}</td>
-          <td>R$ ${item.total},00</td>
-
-        `;
-
-        tabela.appendChild(linha);
-
-      });
-
-      total += valor;
-
-      document
-        .getElementById("totalMesa")
-        .innerHTML =
-        `Total: R$ ${total},00`;
-
-    }
-
-    function irCaixa(){
+function irCaixa(){
 
   let cliente =
 
@@ -386,29 +131,73 @@
 
 }
 
-    localStorage.setItem(
-  "itensMesa",
-  JSON.stringify(itensMesa)
-);
+window.onload = function(){
 
-localStorage.setItem(
-  "totalMesa",
-  total
-);
+  let clienteSalvo =
 
-let clienteAtual =
+    localStorage.getItem(
+      "clienteMesa"
+    );
 
-  document.getElementById(
-    "cliente"
-  ).value;
+  if(clienteSalvo){
 
-localStorage.setItem(
-  "clienteMesa",
-  clienteAtual
-);
+    document.getElementById(
+      "cliente"
+    ).value = clienteSalvo;
 
-  </script>
+  }
 
-</body>
+  let itensSalvos =
 
-</html>
+    JSON.parse(
+      localStorage.getItem(
+        "itensMesa"
+      )
+    ) || [];
+
+  let totalSalvo =
+
+    Number(
+      localStorage.getItem(
+        "totalMesa"
+      )
+    ) || 0;
+
+  itensMesa = itensSalvos;
+
+  total = totalSalvo;
+
+  let tabela =
+
+    document.getElementById(
+      "itensMesa"
+    );
+
+  tabela.innerHTML = "";
+
+  itensMesa.forEach((item) => {
+
+    let linha =
+      document.createElement("tr");
+
+    linha.innerHTML = `
+
+      <td>${item.nome}</td>
+      <td>${item.qtd}</td>
+      <td>R$ ${item.total},00</td>
+
+    `;
+
+    tabela.appendChild(linha);
+
+  });
+
+  document
+    .getElementById("totalMesa")
+    .innerHTML =
+    `Total: R$ ${total},00`;
+
+}
+
+</script>
+```
