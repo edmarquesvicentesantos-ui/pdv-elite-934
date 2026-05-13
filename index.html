@@ -293,6 +293,58 @@ renderizarMesa();
 
 }
 
+  ```javascript
+async function salvarPedidoFirebase(){
+
+try{
+
+const pedido = {
+
+cliente:
+
+document.getElementById(
+"cliente"
+).value,
+
+itens: itensMesa,
+
+total: total,
+
+data:
+new Date().toLocaleString(),
+
+status: "aberto"
+
+};
+
+console.log(
+"Pedido enviado:",
+pedido
+);
+
+}catch(erro){
+
+console.log(
+"Erro ao salvar:",
+erro
+);
+
+}
+
+}
+
+function abrirCaixa(){
+
+salvarMesa();
+
+salvarPedidoFirebase();
+
+window.location.href =
+"caixa.html";
+
+}
+```
+
 </script>
 
 </body>
