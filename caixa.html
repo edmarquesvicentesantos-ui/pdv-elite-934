@@ -1,94 +1,215 @@
-```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Caixa</title>
+
+<link rel="stylesheet"
+href="style.css">
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+💰 Caixa
+</div>
+
+</header>
+
+<nav>
+
+<button onclick="voltar()">
+⬅ Voltar
+</button>
+
+</nav>
+
+<div class="container">
+
+<div class="produtos">
+
+<h2>Fechamento</h2>
+
+<br>
+
+<strong>Cliente:</strong>
+
+<span id="clienteNome">
+-
+</span>
+
+<br><br>
+
+<strong>Total:</strong>
+
+<span id="valorTotal">
+R$ 0,00
+</span>
+
+<br><br>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Produto</th>
+<th>Qtd</th>
+<th>Total</th>
+
+</tr>
+
+</thead>
+
+<tbody id="itensMesa">
+
+</tbody>
+
+</table>
+
+<br>
+
+<button
+class="produto"
+onclick="pagar('PIX')"
+>
+
+📱 PIX
+
+</button>
+
+<button
+class="produto"
+onclick="pagar('Dinheiro')"
+>
+
+💵 Dinheiro
+
+</button>
+
+<br><br>
+
+<div id="resultado">
+
+</div>
+
+</div>
+
+</div>
+
 <script>
 
 function voltar(){
 
-  window.location.href =
-  "index.html";
+window.location.href =
+"index.html";
 
 }
 
-let total =
-  localStorage.getItem("totalMesa");
-
-let itens =
-  JSON.parse(
-    localStorage.getItem("itensMesa")
-  ) || [];
-
 let cliente =
 
-  localStorage.getItem(
-    "clienteMesa"
-  );
+localStorage.getItem(
+"clienteMesa"
+);
+
+let total =
+
+localStorage.getItem(
+"totalMesa"
+);
+
+let itens =
+
+JSON.parse(
+localStorage.getItem(
+"itensMesa"
+)
+) || [];
 
 if(cliente){
 
-  document.getElementById(
-    "clienteNome"
-  ).innerHTML = cliente;
+document.getElementById(
+"clienteNome"
+).innerHTML = cliente;
 
 }
 
 if(total){
 
-  document
-    .getElementById("valorTotal")
-    .innerHTML =
-    `R$ ${total},00`;
+document.getElementById(
+"valorTotal"
+).innerHTML =
+`R$ ${total},00`;
 
 }
 
 let tabela =
-  document.getElementById("itensMesa");
 
-itens.forEach((item) => {
+document.getElementById(
+"itensMesa"
+);
 
-  let linha =
-    document.createElement("tr");
+itens.forEach((item)=>{
 
-  linha.innerHTML = `
+let linha =
+document.createElement("tr");
 
-    <td>${item.nome}</td>
-    <td>${item.qtd}</td>
-    <td>R$ ${item.total},00</td>
+linha.innerHTML = `
 
-  `;
+<td>${item.nome}</td>
+<td>${item.qtd}</td>
+<td>R$ ${item.total},00</td>
 
-  tabela.appendChild(linha);
+`;
+
+tabela.appendChild(linha);
 
 });
 
 function pagar(tipo){
 
-  document
-    .getElementById("resultado")
-    .innerHTML = `
+document
+.getElementById("resultado")
+.innerHTML = `
 
-      <div class="status">
+<div class="status">
 
-        ✔ Pagamento realizado via ${tipo}
+✔ Pagamento realizado via ${tipo}
 
-        <br><br>
+<br><br>
 
-        ✔ Mesa fechada com sucesso
+✔ Venda finalizada
 
-      </div>
+</div>
 
-    `;
+`;
 
-  localStorage.removeItem(
-    "itensMesa"
-  );
+localStorage.removeItem(
+"clienteMesa"
+);
 
-  localStorage.removeItem(
-    "totalMesa"
-  );
+localStorage.removeItem(
+"itensMesa"
+);
 
-  localStorage.removeItem(
-    "clienteMesa"
-  );
+localStorage.removeItem(
+"totalMesa"
+);
 
 }
+
 </script>
-```
+
+</body>
+
+</html>
