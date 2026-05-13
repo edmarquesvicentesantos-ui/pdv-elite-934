@@ -335,6 +335,100 @@ function dividirConta(){
 
 }
 
+  function fecharPagamentoMisto(){
+
+let pix =
+
+Number(
+document.getElementById(
+"valorPix"
+).value
+) || 0;
+
+let cartao =
+
+Number(
+document.getElementById(
+"valorCartao"
+).value
+) || 0;
+
+let dinheiro =
+
+Number(
+document.getElementById(
+"valorDinheiro"
+).value
+) || 0;
+
+let totalPago =
+
+pix + cartao + dinheiro;
+
+let restante =
+
+Number(total) - totalPago;
+
+if(restante > 0){
+
+document
+.getElementById("resultado")
+.innerHTML = `
+
+<div class="status">
+
+⚠ Falta pagar:
+
+R$ ${restante.toFixed(2)}
+
+</div>
+
+`;
+
+return;
+
+}
+
+document
+.getElementById("resultado")
+.innerHTML = `
+
+<div class="status">
+
+✔ Pagamento concluído
+
+<br><br>
+
+📱 PIX:
+R$ ${pix.toFixed(2)}
+
+<br>
+
+💳 Cartão:
+R$ ${cartao.toFixed(2)}
+
+<br>
+
+💵 Dinheiro:
+R$ ${dinheiro.toFixed(2)}
+
+</div>
+
+`;
+
+localStorage.removeItem(
+"clienteMesa"
+);
+
+localStorage.removeItem(
+"itensMesa"
+);
+
+localStorage.removeItem(
+"totalMesa"
+);
+
+}
 </script>
 
 </body>
