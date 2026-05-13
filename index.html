@@ -221,7 +221,13 @@
       <div class="mesa-info">
 
         <strong>Cliente:</strong>
-        João Silva
+
+<input
+  type="text"
+  id="cliente"
+  class="campo"
+  placeholder="Nome do Cliente"
+/>
 
         <br>
 
@@ -354,20 +360,31 @@
 
     function irCaixa(){
 
-      localStorage.setItem(
-        "totalMesa",
-        total
-      );
+  let cliente =
 
-      localStorage.setItem(
-        "itensMesa",
-        JSON.stringify(itensMesa)
-      );
+    document.getElementById(
+      "cliente"
+    ).value;
 
-      window.location.href =
-      "caixa.html";
+  localStorage.setItem(
+    "clienteMesa",
+    cliente
+  );
 
-    }
+  localStorage.setItem(
+    "totalMesa",
+    total
+  );
+
+  localStorage.setItem(
+    "itensMesa",
+    JSON.stringify(itensMesa)
+  );
+
+  window.location.href =
+  "caixa.html";
+
+}
 
   </script>
 
