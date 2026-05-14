@@ -80,12 +80,12 @@ localStorage.getItem(
 let lista =
 
 document.getElementById(
-"listaPedidos"
+"lista"
 );
 
 lista.innerHTML = "";
 
-if(pedidos.length === 0){
+if(.length === 0){
 
 lista.innerHTML = `
 
@@ -102,6 +102,21 @@ return;
 }
 
 pedidos.forEach((item,index)=>{
+
+javascript id="9mds1g"
+if(
+
+!item.nome.includes("Porção")
+
+&&
+
+!item.nome.includes("Espetinho")
+
+){
+
+return;
+
+}
 
 let card =
 document.createElement("div");
